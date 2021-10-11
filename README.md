@@ -12,6 +12,8 @@ I will also create a demo website that uses this technology: an online inbox whe
 * More customization on the NFT data: for example, data about email, avatar, etc.
 * More wallet options (metamask, walletconnect, etc)
 * L2 options
+* the NFT also has a list of authorized users (public keys) who are able to sign in to that account, with possible roles for each
+* look into the possibility of adding privacy: maybe instead of storing the users (public keys) it might be possible to store a hash?
 
 ## Sample User Workflow
 * User enters website and clicks, "log in with web3".
