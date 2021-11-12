@@ -1,7 +1,74 @@
 import React from "react";
-import useEthers, { EthersFunctionality } from "./useEthers";
+import { EthersFunctionality, web3Providers } from "../interfaces/Web3";
+import { ethers } from "ethers";
 
 const metamaskWebsite = "https://metamask.io/";
+
+export interface IMetamaskFunctionality extends EthersFunctionality {
+  onClickConnect: () => Promise<void>;
+  onAccountChange: (fallback: () => void) => void;
+  offAccountChange: (fallback: () => void) => void;
+}
+
+class MetamaskFunctionality implements IMetamaskFunctionality {
+  public web3Connected: web3Providers;
+  public provider: ethers.providers.Web3Provider;
+  public signer: ethers.providers.JsonRpcSigner;
+
+  constructor(
+    provider: ethers.providers.Web3Provider,
+    signer: ethers.providers.JsonRpcSigner
+  ) {
+    this.web3Connected = "metamask";
+    this.provider = provider;
+    this.signer = signer;
+  }
+
+  async onClickConnect() {
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+  }
+
+  onAccountChange(fallback: () => void) {
+    window.ethereum.on("accountsChanged", fallback);
+  }
+
+  offAccountChange(fallback: () => void) {
+    window.ethereum.removeListener("accountChanged", fallback);
+  }
+
+  get web3ConnectionDetails() {
+    return `metamask ${this.provider.network?.name}`;
+  }
+}
+
+// A Web3Provider wraps a standard Web3 provider, which is
+// what MetaMask injects as window.ethereum into each page
+const metamaskProvider =
+  window.ethereum && window.ethereum.isMetaMask
+    ? new ethers.providers.Web3Provider(window.ethereum)
+    : null;
+
+// The MetaMask plugin also allows signing transactions to
+// send ether and pay to change state within the blockchain.
+// For this, you need the account signer...
+const metamaskSigner = metamaskProvider?.getSigner();
+
+const metamaskFunctions =
+  (metamaskProvider &&
+    metamaskSigner &&
+    new MetamaskFunctionality(metamaskProvider, metamaskSigner)) ||
+  null;
+
+if (metamaskProvider)
+  // Force page refreshes on network changes
+  metamaskProvider.on("network", (newNetwork, oldNetwork) => {
+    // When a Provider makes its initial connection, it emits a "network"
+    // event with a null oldNetwork along with the newNetwork. So, if the
+    // oldNetwork exists, it represents a changing network
+    if (oldNetwork) {
+      window.location.reload();
+    }
+  });
 
 export interface MetamaskNotInstalled extends MetamaskFunctions {
   notInstalled: true;
@@ -18,16 +85,15 @@ export interface MetamaskError extends MetamaskFunctions {
 export interface MetamaskSuccess extends MetamaskFunctions {
   notInstalled: false;
   isError: false;
-  connected: boolean;
-  network: string | null;
-  address: string | null;
+  // connected: boolean;
   onClickConnect: () => void;
+  connectionId: symbol;
   ethers: EthersFunctionality;
 }
 
 export interface MetamaskFunctions {
   ethers?: EthersFunctionality;
-  address?: string | null;
+  connectionId?: symbol;
 }
 
 export type MetamaskTypes =
@@ -35,90 +101,67 @@ export type MetamaskTypes =
   | MetamaskError
   | MetamaskSuccess;
 
-export default function useMetamask(): MetamaskTypes {
-  const ethersFunctions = useEthers();
-  const [connectionSymbol, setConnectionSymbol] = React.useState(Symbol());
-  const [address, setAddress] = React.useState<string | null>(null);
+export default function useMetamask({
+  disabled
+}: {
+  disabled: boolean;
+}): MetamaskTypes {
+  // const [connectionSymbol, setConnectionSymbol] = React.useState(Symbol());
   const [error, setError] = React.useState<string | null>(null);
-  const network =
-    (ethersFunctions.web3Connected === "metamask" &&
-      ethersFunctions.getNetwork()) ||
-    null;
-  const notInstalled = ethersFunctions.web3Connected !== "metamask";
+  const [connectionId, setConnectionId] = React.useState(Symbol());
+
+  const notInstalled = metamaskFunctions === null;
 
   const onClickConnect = () => {
-    if (address) return;
     if (notInstalled) {
       return setError("metamask is not available");
     }
-    ethersFunctions.onClickConnect().catch((err) => {
+    metamaskFunctions.onClickConnect().catch(err => {
       console.error(err);
       setError(err.message);
     });
   };
 
   React.useEffect(() => {
-    if (ethersFunctions.web3Connected !== "metamask") return;
+    if (disabled) {
+      //TODO: disconnect?
+      return;
+    }
+
+    if (!metamaskFunctions) return;
 
     const fb = () => {
-      setAddress(null);
-      setConnectionSymbol(Symbol());
+      // setAddress(null);
+      setConnectionId(Symbol());
     };
 
-    ethersFunctions.onAccountChange(fb);
+    metamaskFunctions.onAccountChange(fb);
 
     return () => {
-      ethersFunctions.offAccountChange(fb);
+      metamaskFunctions.offAccountChange(fb);
     };
-  }, [ethersFunctions, network]);
+  }, [disabled]);
 
-  React.useEffect(() => {
-    if (notInstalled || address) return;
-
-    let stop = false;
-
-    ethersFunctions
-      .getSelectedAddress()
-      .then((addr) => {
-        if (stop) return;
-        setAddress(addr);
-      })
-      .catch((err) => {
-        if (stop) return;
-        if (err.message && err.message.indexOf("unknown account #0") !== -1) {
-          setAddress(null);
-          return;
-        }
-        console.error(err);
-        setError(err.message);
-      });
-
-    return () => {
-      stop = true;
-    };
-  }, [network, notInstalled, ethersFunctions, connectionSymbol, address]);
-
-  if (notInstalled)
+  if (disabled || notInstalled)
     return {
       notInstalled: true,
       isError: false,
-      metamaskWebsite,
+      metamaskWebsite
     };
 
   if (error)
     return {
       notInstalled: false,
       isError: true,
-      error,
+      error
     };
 
   return {
     notInstalled: false,
     isError: false,
-    connected: address !== null,
-    address,
-    network,
+    // connected: address !== null,
+    connectionId,
     onClickConnect,
-    ethers: ethersFunctions,
+    ethers: metamaskFunctions
   };
 }
