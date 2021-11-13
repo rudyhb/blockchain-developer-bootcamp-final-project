@@ -1,9 +1,9 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import useWeb3Info from "./hooks/useWeb3Info";
 import Web3Provider from "./components/shared/Web3Provider";
 import Web3Button from "./components/web3/Web3Button";
+import TokenManagement from "./components/TokenManagement";
 
 function App() {
   return (
@@ -19,17 +19,7 @@ function App() {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <code>details: {JSON.stringify(useWeb3Info())}</code>
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer">
-            Learn React
-          </a>
+          <TokenManagement />
         </header>
       </div>
     </Web3Provider>
