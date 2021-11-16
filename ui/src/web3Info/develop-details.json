@@ -1,6 +1,4 @@
 {
-  "url": "http://127.0.0.1:9545/",
-  "mnemonic": "satisfy old pact provide already salmon fold material alone coconut crop celery",
   "contractAddress": "0x87165e5BE6Cc012761D38D0CC773EC89eB32FD1F",
   "abi": [
     {

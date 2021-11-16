@@ -5,7 +5,7 @@ import { EthersFunctionality, Web3Options } from "../../interfaces/Web3";
 import useMetamask, { MetamaskTypes } from "../../hooks/useMetamask";
 import useRpc from "../../hooks/useRpc";
 
-export default function Web3Provider({
+export default function Web3Provider_old({
   children,
   render
 }: {
