@@ -26,11 +26,12 @@ export default function Web3Status() {
     }
     let stop = false;
 
-    library.getSigner(account)
+    library
+      .getSigner(account)
       .getBalance()
       .then(balance => {
         if (stop) return;
-        console.log('got balance!');
+        console.log("got balance!");
         setMoney(balance);
       })
       .catch(e => {
@@ -42,7 +43,7 @@ export default function Web3Status() {
     return () => {
       stop = true;
     };
-  }, [address, library]);
+  }, [address, library, account]);
 
   return (
     <>

@@ -12,7 +12,6 @@
     "@types/react-dom": "^17.0.0",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
-    "@web3-react/network-connector": "^6.1.9",
     "ethers": "^5.5.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -48,7 +47,10 @@
     ]
   },
   "react-dotenv": {
-    "whitelist": ["RPC_URL", "RPC_CHAIN_ID"]
+    "whitelist": [
+      "RPC_URL",
+      "RPC_CHAIN_ID"
+    ]
   },
   "devDependencies": {
     "prettier": "^2.4.1"

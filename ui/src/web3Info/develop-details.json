@@ -1,5 +1,6 @@
 {
   "contractAddress": "0xd4ed4100c49C26CF85f33C19E7Fcf602cf63dCCa",
+  "useLocalRpc": true,
   "abi": [
     {
       "anonymous": false,

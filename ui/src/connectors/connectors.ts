@@ -1,6 +1,6 @@
 // from @web3-react
 import { InjectedConnector } from "@web3-react/injected-connector";
-import { supportedChainIds } from "./constants/web3Constants";
+import { supportedChainIds } from "../constants/web3Constants";
 import { NetworkConnector } from './NetworkConnector'
 import env from "react-dotenv";
 
