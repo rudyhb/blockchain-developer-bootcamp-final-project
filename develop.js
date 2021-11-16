@@ -12,11 +12,15 @@ const TARGET_JSON_PATH = path.resolve(
 
 const develop = spawn("truffle", ["develop"]);
 
+process.on("SIGINT", function () {
+  develop.emit("SIGINT");
+  develop.emit("SIGINT");
+  process.exit();
+});
+
 process.stdin.pipe(develop.stdin);
 
 const web3Details = {
-  url: null,
-  mnemonic: null,
   contractAddress: null,
   abi: null,
   mainAccount: null
@@ -55,22 +59,6 @@ const exportJson = () => {
 
 develop.stdout.on("data", (data) => {
   console.log(`stdout: ${data}`);
-  if (!web3Details.url) {
-    const regex = /started at (\S+)/i;
-    if (regex.test(data)) {
-      const result = regex.exec(data);
-      web3Details.url = result[1].trim();
-      console.log(`found RPC url: <<${web3Details.url}>>`);
-    }
-  }
-  if (!web3Details.mnemonic) {
-    const regex = /Mnemonic:((?: \S+)+)/i;
-    if (regex.test(data)) {
-      const result = regex.exec(data);
-      web3Details.mnemonic = result[1].trim();
-      console.log(`found mnemonic: <<${web3Details.mnemonic}>>`);
-    }
-  }
   if (!migrated && />\s*/.test(data)) {
     migrated = true;
     migrate();

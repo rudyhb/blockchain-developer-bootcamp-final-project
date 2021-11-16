@@ -15,18 +15,10 @@ import { Web3Provider, JsonRpcProvider } from "@ethersproject/providers";
 import { formatEther } from "@ethersproject/units";
 
 import { useEagerConnect, useInactiveListener } from "./hooks/web3-react-hooks";
-import { injected, network } from "./connectors";
+import { injected } from "./connectors";
 import { Spinner } from "./components/shared/Spinner";
-
-enum ConnectorNames {
-  Injected = "Injected",
-  Network = "Network"
-}
-
-const connectorsByName: { [connectorName in ConnectorNames]: any } = {
-  [ConnectorNames.Injected]: injected,
-  [ConnectorNames.Network]: network
-};
+import { supportedChainIds } from "./constants/web3Constants";
+import Web3Status from "./components/web3/Web3Status";
 
 function getErrorMessage(error: Error) {
   if (error instanceof NoEthereumProviderError) {
@@ -48,7 +40,7 @@ function getLibrary(provider: any): JsonRpcProvider {
     provider.host &&
     typeof provider.host === "string"
   ) {
-    console.log('using JsonRpcProvider!');
+    console.log("using JsonRpcProvider!");
     library = new JsonRpcProvider(provider);
   } else {
     library = new Web3Provider(provider);
@@ -209,6 +201,17 @@ function Header() {
         <Account />
         <Balance />
       </h3>
+      <h3
+        style={{
+          display: "grid",
+          gridGap: "1rem",
+          gridTemplateColumns: "1fr min-content 1fr",
+          maxWidth: "20rem",
+          lineHeight: "2rem",
+          margin: "auto"
+        }}>
+        <Web3Status />
+      </h3>
     </>
   );
 }
@@ -225,6 +228,7 @@ function CoreApp() {
     active,
     error
   } = context;
+  console.log('chainid:', chainId);
 
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = React.useState<any>();
@@ -240,6 +244,11 @@ function CoreApp() {
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
   useInactiveListener(!triedEager || !!activatingConnector);
 
+  const currentConnector = injected;
+  const activating = currentConnector === activatingConnector;
+  const connected = currentConnector === connector;
+  const disabled = !triedEager || !!activatingConnector || connected || !!error;
+
   return (
     <>
       <Header />
@@ -252,59 +261,44 @@ function CoreApp() {
           maxWidth: "20rem",
           margin: "auto"
         }}>
-        {Object.keys(connectorsByName).map(name => {
-          const currentConnector = connectorsByName[name as ConnectorNames];
-          const activating = currentConnector === activatingConnector;
-          const connected = currentConnector === connector;
-          const disabled =
-            !triedEager || !!activatingConnector || connected || !!error;
-
-          return (
-            <button
-              style={{
-                height: "3rem",
-                borderRadius: "1rem",
-                borderColor: activating
-                  ? "orange"
-                  : connected
-                  ? "green"
-                  : "unset",
-                cursor: disabled ? "unset" : "pointer",
-                position: "relative"
-              }}
-              disabled={disabled}
-              key={name}
-              onClick={() => {
-                setActivatingConnector(currentConnector);
-                activate(connectorsByName[name as ConnectorNames]);
-              }}>
-              <div
-                style={{
-                  position: "absolute",
-                  top: "0",
-                  left: "0",
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  color: "black",
-                  margin: "0 0 0 1rem"
-                }}>
-                {activating && (
-                  <Spinner
-                    color={"black"}
-                    style={{ height: "25%", marginLeft: "-1rem" }}
-                  />
-                )}
-                {connected && (
-                  <span role="img" aria-label="check">
-                    ✅
-                  </span>
-                )}
-              </div>
-              {name}
-            </button>
-          );
-        })}
+        <button
+          style={{
+            height: "3rem",
+            borderRadius: "1rem",
+            borderColor: activating ? "orange" : connected ? "green" : "unset",
+            cursor: disabled ? "unset" : "pointer",
+            position: "relative"
+          }}
+          disabled={disabled}
+          onClick={() => {
+            setActivatingConnector(currentConnector);
+            activate(currentConnector);
+          }}>
+          <div
+            style={{
+              position: "absolute",
+              top: "0",
+              left: "0",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              color: "black",
+              margin: "0 0 0 1rem"
+            }}>
+            {activating && (
+              <Spinner
+                color={"black"}
+                style={{ height: "25%", marginLeft: "-1rem" }}
+              />
+            )}
+            {connected && (
+              <span role="img" aria-label="check">
+                ✅
+              </span>
+            )}
+          </div>
+          {"Injected"}
+        </button>
       </div>
       <div
         style={{
@@ -369,23 +363,8 @@ function CoreApp() {
             Sign Message
           </button>
         )}
-        {!!(
-          connector === connectorsByName[ConnectorNames.Network] && chainId
-        ) && (
-          <button
-            style={{
-              height: "3rem",
-              borderRadius: "1rem",
-              cursor: "pointer"
-            }}
-            onClick={() => {
-              (connector as any).changeChainId(chainId === 1 ? 4 : 1);
-            }}>
-            Switch Networks
-          </button>
-        )}
       </div>
-      <TokenManagement/>
+      <TokenManagement />
     </>
   );
 }

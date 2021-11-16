@@ -1,28 +1,36 @@
 import React from "react";
-import { EthersFunctionality } from "../../interfaces/Web3";
 import { BigNumber, utils } from "ethers";
-import useAddress from "../../hooks/useAddress";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 
-export default function Web3Status({
-  provider
-}: {
-  provider: EthersFunctionality | null;
-}) {
-  const address = useAddress({ provider });
+export default function Web3Status() {
+  const context = useWeb3React<Web3Provider>();
+  const {
+    connector,
+    library,
+    chainId,
+    account,
+    activate,
+    deactivate,
+    active,
+    error
+  } = context;
+  const address = account;
   const [money, setMoney] = React.useState<BigNumber>(BigNumber.from(0));
-  const network = provider?.web3ConnectionDetails || null;
+  const network = library?.network;
 
   React.useEffect(() => {
-    if (!provider || !address) {
+    if (!library || !account) {
       setMoney(BigNumber.from(0));
       return;
     }
     let stop = false;
 
-    provider.signer
+    library.getSigner(account)
       .getBalance()
       .then(balance => {
         if (stop) return;
+        console.log('got balance!');
         setMoney(balance);
       })
       .catch(e => {
@@ -34,11 +42,11 @@ export default function Web3Status({
     return () => {
       stop = true;
     };
-  }, [address, provider]);
+  }, [address, library]);
 
   return (
     <>
-      <p>network: {network}</p>
+      <p>network: {network?.name}</p>
       <p>address: {address}</p>
       <p>monies: {utils.formatEther(money)}</p>
     </>

@@ -1,20 +1,20 @@
 import React from "react";
 import useContract from "../hooks/useContract";
 import Loading from "./shared/Loading";
-import web3Context from "../context/web3Context";
-import useAddress from "../hooks/useAddress";
+import { useWeb3React } from "@web3-react/core";
 
 export default function TokenManagement() {
   const contract = useContract();
-  const web3 = React.useContext(web3Context);
-  const contractWithSigner = React.useMemo(
-    () =>
-      (web3.provider?.signer && contract?.connect(web3.provider?.signer)) ||
-      null,
-    [contract, web3.provider?.signer]
-  );
+  const web3 = useWeb3React();
+  // const contractWithSigner = React.useMemo(
+  //   () =>
+  //     (web3.provider?.signer && contract?.connect(web3.provider?.signer)) ||
+  //     null,
+  //   [contract, web3.provider?.signer]
+  // );
+  const contractWithSigner = contract;
 
-  const myAddress = useAddress({ provider: web3.provider });
+  const myAddress = web3.account;
   const [myTokens, setMyTokens] = React.useState<string[] | null>(null);
   const [myTokensSymbol, setMyTokensSymbol] = React.useState(Symbol());
 
@@ -35,7 +35,7 @@ export default function TokenManagement() {
       .then(() => {
         setNewUriLoading(false);
         setMyTokensSymbol(Symbol());
-        setNewUri('');
+        setNewUri("");
       })
       .catch((e: unknown) => {
         setNewUriLoading(false);

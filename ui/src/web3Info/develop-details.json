@@ -203,5 +203,6 @@
       "stateMutability": "nonpayable",
       "type": "function"
     }
-  ]
+  ],
+  "mainAccount": "0x2f405945d4eafc4d7d76df89f99056ff5d57396f"
 }

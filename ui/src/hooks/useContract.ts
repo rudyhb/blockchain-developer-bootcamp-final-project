@@ -1,5 +1,4 @@
 import React from "react";
-import web3Context from "../context/web3Context";
 import useWeb3Info from "./useWeb3Info";
 import { ethers } from "ethers";
 import { useContractBase } from "./useContractBase";
