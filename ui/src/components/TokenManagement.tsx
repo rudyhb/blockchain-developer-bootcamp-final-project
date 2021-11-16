@@ -69,7 +69,7 @@ export default function TokenManagement() {
     return () => {
       stop = true;
     };
-  }, [contract, myTokensSymbol, myAddress]);
+  }, [contract?.address, myTokensSymbol, myAddress]);
 
   if (!contract) return <Loading />;
 

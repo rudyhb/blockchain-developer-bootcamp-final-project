@@ -22,9 +22,11 @@ export function useContractBase(
     ? library.getSigner(account).connectUnchecked()
     : library;
 
+  const connectionUrl: string | undefined = signerOrProvider?.provider?.connection?.url;
+
   return useMemo(() => {
     return !contractAddress || !ABI
       ? null
       : new Contract(contractAddress, ABI, signerOrProvider);
-  }, [contractAddress, ABI, signerOrProvider]);
+  }, [contractAddress, ABI, connectionUrl]);
 }

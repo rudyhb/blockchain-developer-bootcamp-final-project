@@ -2,26 +2,30 @@ import React from "react";
 import { Fragment, JsonFragment } from "@ethersproject/abi";
 
 interface Web3Info {
-  contractAddress?: string;
+  localContractAddress?: string;
+  deployedContractAddresses?: { [chainId: number]: string };
   abi?: ReadonlyArray<Fragment | JsonFragment | string>;
 }
 
 const importDetails: () => Promise<Web3Info> = async () => {
+  const formattedDetails: Web3Info = {};
   try {
     const developDetails: any = await import(
       "../web3Info/develop-details.json"
     );
     if (developDetails) {
-      const formattedDetails: Web3Info = {};
       if (typeof developDetails.contractAddress === "string")
-        formattedDetails.contractAddress = developDetails.contractAddress;
+        formattedDetails.localContractAddress = developDetails.contractAddress;
       if (developDetails.abi && Array.isArray(developDetails.abi))
         formattedDetails.abi = developDetails.abi;
-
-      return formattedDetails;
     }
   } catch {}
-  return {};
+  try {
+    const deploymentDetails = (await import("../web3Info/deployment-details"))
+      .default;
+    formattedDetails.deployedContractAddresses = deploymentDetails;
+  } catch {}
+  return formattedDetails;
 };
 
 export default function useWeb3Info(): Web3Info | null {

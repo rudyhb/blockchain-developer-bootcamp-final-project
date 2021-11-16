@@ -50,7 +50,7 @@ function getLibrary(provider: any): JsonRpcProvider {
     provider.host &&
     typeof provider.host === "string"
   ) {
-    console.log("using JsonRpcProvider!");
+    console.log("using JsonRpcProvider!", provider);
     library = new JsonRpcProvider(provider);
   } else {
     library = new Web3Provider(provider);
