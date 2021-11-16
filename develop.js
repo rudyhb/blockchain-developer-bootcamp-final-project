@@ -22,12 +22,10 @@ process.stdin.pipe(develop.stdin);
 
 const web3Details = {
   contractAddress: null,
-  abi: null,
-  mainAccount: null
+  abi: null
 };
 
 let migrated = false;
-let transferred = false;
 
 const run = (command) => {
   console.log(`RUNNING: ${command}`);
@@ -36,13 +34,6 @@ const run = (command) => {
 
 const migrate = () => {
   run("truffle migrate");
-};
-
-const transfer = () => {
-  const amount = "6000000000000000000";
-  run(
-    `web3.eth.sendTransaction({to: "${MY_ADDRESS}", value: "${amount}", gas: 23000, from: "${web3Details.mainAccount}"})`
-  );
 };
 
 const getAbi = () => {
@@ -63,10 +54,6 @@ develop.stdout.on("data", (data) => {
     migrated = true;
     migrate();
   }
-  if (web3Details.mainAccount && !transferred && />\s*/.test(data)) {
-    transferred = true;
-    transfer();
-  }
   if (!web3Details.contractAddress) {
     const regex = /contract address:\s+(0x[0-9a-f]+)/i;
     if (regex.test(data)) {
@@ -75,14 +62,6 @@ develop.stdout.on("data", (data) => {
       console.log(`found contract address: <<${web3Details.contractAddress}>>`);
       getAbi();
       exportJson();
-    }
-  }
-  if (!web3Details.mainAccount) {
-    const regex = /Accounts:\s+\(0\) (0x[0-9a-f]+)/i;
-    if (regex.test(data)) {
-      const result = regex.exec(data);
-      web3Details.mainAccount = result[1].trim();
-      console.log(`found main account: <<${web3Details.mainAccount}>>`);
     }
   }
 });
