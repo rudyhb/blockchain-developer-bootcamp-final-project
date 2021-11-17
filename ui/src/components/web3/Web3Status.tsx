@@ -2,6 +2,7 @@ import React from "react";
 import { BigNumber, utils } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import TransferEth from "./TransferEth";
 
 export default function Web3Status() {
   const context = useWeb3React<Web3Provider>();
@@ -50,6 +51,7 @@ export default function Web3Status() {
       <p>network: {network?.name}</p>
       <p>address: {address}</p>
       <p>monies: {utils.formatEther(money)}</p>
+      <TransferEth />
     </>
   );
 }
