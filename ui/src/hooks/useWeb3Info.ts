@@ -13,6 +13,7 @@ const importDetails: () => Promise<Web3Info> = async () => {
     const developDetails: any = await import(
       "../web3Info/develop-details.json"
     );
+    console.log(developDetails)
     if (developDetails && developDetails.useLocalRpc) {
       if (typeof developDetails.contractAddress === "string")
         formattedDetails.localContractAddress = developDetails.contractAddress;

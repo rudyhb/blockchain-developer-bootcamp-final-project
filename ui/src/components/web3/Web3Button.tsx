@@ -14,6 +14,7 @@ import {
 } from "../../hooks/web3-react-hooks";
 import { injected, network } from "../../connectors/connectors";
 import { Spinner } from "../shared/Spinner";
+import useWeb3Info from "../../hooks/useWeb3Info";
 
 enum ConnectorNames {
   Injected = "Injected",
@@ -200,6 +201,8 @@ export default function Web3Button({ showDetails = false }) {
   } = context;
   console.log("chainid:", chainId);
 
+  const web3Info = useWeb3Info();
+
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = React.useState<any>();
   React.useEffect(() => {
@@ -213,6 +216,12 @@ export default function Web3Button({ showDetails = false }) {
 
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
   useInactiveListener(!triedEager || !!activatingConnector);
+
+  const validConnectors: ConnectorNames[] = web3Info?.localContractAddress
+    ? (Object.keys(connectorsByName) as ConnectorNames[])
+    : (Object.keys(connectorsByName).filter(
+        name => name !== ConnectorNames.Network
+      ) as ConnectorNames[]);
 
   return (
     <>
@@ -230,10 +239,10 @@ export default function Web3Button({ showDetails = false }) {
           maxWidth: "20rem",
           margin: "auto"
         }}>
-        {Object.keys(connectorsByName)
-          .filter(name => connectorsByName[name as ConnectorNames])
+        {validConnectors
+          .filter(name => connectorsByName[name])
           .map(name => {
-            const currentConnector = connectorsByName[name as ConnectorNames];
+            const currentConnector = connectorsByName[name];
             const activating = currentConnector === activatingConnector;
             const connected = currentConnector === connector;
             const disabled =
@@ -256,7 +265,7 @@ export default function Web3Button({ showDetails = false }) {
                 key={name}
                 onClick={() => {
                   setActivatingConnector(currentConnector);
-                  activate(connectorsByName[name as ConnectorNames]);
+                  activate(connectorsByName[name]);
                 }}>
                 <div
                   style={{
