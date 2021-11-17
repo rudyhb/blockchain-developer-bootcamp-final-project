@@ -3,25 +3,20 @@ import { useWeb3React } from "@web3-react/core";
 import { BigNumber, ethers } from "ethers";
 import Loading from "../shared/Loading";
 
-const ethToWei = (ethVal: number) => {
-  const eth = BigNumber.from(ethVal);
-  return eth.mul(ethers.constants.WeiPerEther);
-};
-
 export default function TransferEth() {
   const { account, library } = useWeb3React();
 
   const [recipient, setRecipient] = React.useState("");
   const [value, setValue] = React.useState("0");
-  const numberValue = parseFloat(value);
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
+
   const btnDisabled = !!(
     error ||
     success ||
     !recipient ||
-    !numberValue ||
+    !parseFloat(value) ||
     loading
   );
 
@@ -54,12 +49,19 @@ export default function TransferEth() {
 
   const sendEth = () => {
     setLoading(true);
+    let numberValue: BigNumber;
+    try {
+      numberValue = ethers.utils.parseEther(value);
+    } catch (e) {
+      setError("invalid quantity: " + value);
+      return;
+    }
     library
       .getSigner(account)
       .sendTransaction({
         from: account,
         to: recipient,
-        value: ethToWei(numberValue)
+        value: numberValue
       })
       .then(() => {
         setLoading(false);
@@ -73,13 +75,13 @@ export default function TransferEth() {
 
   return (
     <>
-      <p>Send ETH</p>
-      <label>To: </label>
+      <label>Send ETH To: </label>
       <input
         type="text"
         value={recipient}
         onChange={e => setRecip(e.target.value)}
       />
+      <br />
       <label>Amount: </label>
       <input
         type="number"

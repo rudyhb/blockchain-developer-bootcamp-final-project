@@ -74,7 +74,10 @@ export default function TokenManagement() {
   if (!contract) return <Loading />;
 
   return (
-    <div>
+    <div
+      style={{
+        margin: "20px"
+      }}>
       <div>
         <h2>My NTF IDs:</h2>
         {myTokens === null ? (

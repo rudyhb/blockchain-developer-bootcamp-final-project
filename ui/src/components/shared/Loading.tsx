@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Loading({ speedMs = 100, loadingText = "loading" }) {
+export default function Loading({ speedMs = 300, loadingText = "loading" }) {
   const [text, setText] = React.useState(loadingText);
 
   React.useEffect(() => {

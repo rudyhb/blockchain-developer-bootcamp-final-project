@@ -4,9 +4,9 @@ import TokenManagement from "./components/TokenManagement";
 
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider, JsonRpcProvider } from "@ethersproject/providers";
-import Web3Button from "./components/web3/Web3Button";
 import Signer from "./components/web3/Signer";
-import Web3Details from "./components/web3/Web3Details";
+import NavBar from "./components/NavBar";
+import Divider from "./components/shared/Divider";
 
 function getLibrary(provider: any): JsonRpcProvider {
   let library: JsonRpcProvider;
@@ -26,12 +26,9 @@ function getLibrary(provider: any): JsonRpcProvider {
 export default function App() {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
-      <Web3Button />
-      <hr style={{ margin: "2rem" }} />
-      <Web3Details />
-      <hr style={{ margin: "2rem" }} />
-
+      <NavBar/>
       <Signer />
+      <Divider/>
       <TokenManagement />
     </Web3ReactProvider>
   );

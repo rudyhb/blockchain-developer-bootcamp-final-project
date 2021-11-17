@@ -16,8 +16,8 @@ import { Spinner } from "../shared/Spinner";
 import useWeb3Info from "../../hooks/useWeb3Info";
 
 enum ConnectorNames {
-  Injected = "Injected",
-  Network = "Network"
+  Injected = "Metamask",
+  Network = "Local RPC"
 }
 
 const connectorsByName: { [connectorName in ConnectorNames]: any } = {
@@ -82,6 +82,9 @@ export default function Web3Button() {
             const connected = currentConnector === connector;
             const disabled =
               !triedEager || !!activatingConnector || connected || !!error;
+            const display = connected
+              ? `${name} connected`
+              : `connect to ${name}`;
 
             return (
               <button
@@ -93,6 +96,7 @@ export default function Web3Button() {
                     : connected
                     ? "green"
                     : "unset",
+                  paddingLeft: connected ? "20px" : "",
                   cursor: disabled ? "unset" : "pointer",
                   position: "relative"
                 }}
@@ -125,7 +129,7 @@ export default function Web3Button() {
                     </span>
                   )}
                 </div>
-                {name}
+                {display}
               </button>
             );
           })}

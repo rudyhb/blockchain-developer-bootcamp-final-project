@@ -35,7 +35,13 @@ export default function OnClickSpan({
 
   return (
     <Tooltip text={text}>
-      <span onClick={doOnClick}>{children}</span>
+      <span
+        style={{
+          cursor: "pointer"
+        }}
+        onClick={doOnClick}>
+        {children}
+      </span>
     </Tooltip>
   );
 }
