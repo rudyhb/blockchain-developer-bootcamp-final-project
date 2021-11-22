@@ -1,5 +1,6 @@
 import React from "react";
 import { Fragment, JsonFragment } from "@ethersproject/abi";
+import env from "react-dotenv";
 
 interface Web3Info {
   localContractAddress?: string;
@@ -9,20 +10,23 @@ interface Web3Info {
 
 const importDetails: () => Promise<Web3Info> = async () => {
   const formattedDetails: Web3Info = {};
-  try {
-    const developDetails: any = await import(
-      "../web3Info/develop-details.json"
-    );
-    if (developDetails && developDetails.useLocalRpc) {
-      if (typeof developDetails.contractAddress === "string")
-        formattedDetails.localContractAddress = developDetails.contractAddress;
-      if (developDetails.abi && Array.isArray(developDetails.abi))
-        formattedDetails.abi = developDetails.abi;
-    }
-  } catch {}
+  if (env.USE_LOCAL_RPC)
+  {
+    try {
+      const developDetails: any = await import(
+        "../web3Info/develop-details.json"
+        );
+      if (developDetails) {
+        if (typeof developDetails.contractAddress === "string")
+          formattedDetails.localContractAddress = developDetails.contractAddress;
+        if (developDetails.abi && Array.isArray(developDetails.abi))
+          formattedDetails.abi = developDetails.abi;
+      }
+    } catch {}
+  }
   try {
     const deploymentDetails = (await import("../web3Info/deployment-details"))
-      .default;
+      .deploymentAddress;
     formattedDetails.deployedContractAddresses = deploymentDetails;
   } catch {}
   return formattedDetails;

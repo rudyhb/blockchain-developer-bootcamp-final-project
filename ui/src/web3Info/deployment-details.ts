@@ -1,3 +1,3 @@
-const deploymentAddress: { [chainId: number]: string } = {};
+export const deploymentAddress: { [chainId: number]: string } = {};
 
-export default deploymentAddress;
+export const apiAddress: string = "http://localhost:8081";

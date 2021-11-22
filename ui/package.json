@@ -49,7 +49,8 @@
   "react-dotenv": {
     "whitelist": [
       "RPC_URL",
-      "RPC_CHAIN_ID"
+      "RPC_CHAIN_ID",
+      "USE_LOCAL_RPC"
     ]
   },
   "devDependencies": {

@@ -2,6 +2,14 @@ import React from "react";
 import useContract from "../hooks/useContract";
 import Loading from "./shared/Loading";
 import { useWeb3React } from "@web3-react/core";
+import { BigNumber } from "ethers";
+import NftIdBadge from "./NftIdBadge";
+
+const getNftIdFromEvent = (event: any) => {
+  if (event && event.args && event.args[1])
+    return event.args[1] as BigNumber;
+  throw new Error("invalid format from event")
+}
 
 export default function TokenManagement() {
   const contract = useContract();
@@ -15,27 +23,28 @@ export default function TokenManagement() {
   const contractWithSigner = contract;
 
   const myAddress = web3.account;
-  const [myTokens, setMyTokens] = React.useState<string[] | null>(null);
+  const [myTokens, setMyTokens] = React.useState<BigNumber[] | null>(null);
   const [myTokensSymbol, setMyTokensSymbol] = React.useState(Symbol());
 
   const submitDisabled = !contractWithSigner;
-  const [newUri, setNewUri] = React.useState("");
   const [newUriLoading, setNewUriLoading] = React.useState(false);
-  const onNewUriChange: React.ChangeEventHandler<HTMLInputElement> = e => {
-    setNewUri(e.target.value);
-  };
 
   const onNewUriSubmit: React.FormEventHandler = e => {
     e.preventDefault();
     if (submitDisabled) return;
-    console.log("submitting new nft with uri:", newUri);
+    console.log("submitting new nft");
     setNewUriLoading(true);
     contractWithSigner
-      .mint(newUri)
+      .mint("nftid")
+      .then((response: any) => {
+        console.log('answer: ', response)
+        if (response && typeof response.wait === 'function')
+          return response.wait(1);
+        return null;
+      })
       .then(() => {
         setNewUriLoading(false);
         setMyTokensSymbol(Symbol());
-        setNewUri("");
       })
       .catch((e: unknown) => {
         setNewUriLoading(false);
@@ -57,8 +66,9 @@ export default function TokenManagement() {
     ])
       .then(([mintedEvents, transferredEvents]) => {
         if (stop) return;
+        console.log(mintedEvents)
         setMyTokens(
-          mintedEvents.concat(transferredEvents).map(e => JSON.stringify(e))
+          mintedEvents.concat(transferredEvents).map(e => getNftIdFromEvent(e))
         );
       })
       .catch(e => {
@@ -85,26 +95,23 @@ export default function TokenManagement() {
         ) : (
           <ul>
             {myTokens.map(token => (
-              <li key={token}>
-                <p>{token}</p>
+              <li key={token.toHexString()}>
+                <NftIdBadge id={token}/>
               </li>
             ))}
           </ul>
         )}
       </div>
       <div>
-        <h2>Mint:</h2>
         {newUriLoading ? (
           <Loading />
         ) : (
           <div>
-            <label>uri: </label>
-            <input type="text" value={newUri} onChange={onNewUriChange} />
             <button
               type="submit"
               disabled={submitDisabled}
               onClick={onNewUriSubmit}>
-              Mint!
+              Mint a new NFT ID
             </button>
           </div>
         )}
