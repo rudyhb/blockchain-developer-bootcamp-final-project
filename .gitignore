@@ -5,3 +5,5 @@ build
 .DS_Store
 node_modules/
 env.js
+
+ui/src/web3Info/develop-details.json
