@@ -5,7 +5,8 @@ import env from "react-dotenv";
 interface Web3Info {
   localContractAddress?: string;
   deployedContractAddresses?: { [chainId: number]: string };
-  abi?: ReadonlyArray<Fragment | JsonFragment | string>;
+  localAbi?: ReadonlyArray<Fragment | JsonFragment | string>;
+  deployedAbi?: { [chainId: number]: ReadonlyArray<Fragment | JsonFragment | string> };
 }
 
 const importDetails: () => Promise<Web3Info> = async () => {
@@ -20,14 +21,17 @@ const importDetails: () => Promise<Web3Info> = async () => {
         if (typeof developDetails.contractAddress === "string")
           formattedDetails.localContractAddress = developDetails.contractAddress;
         if (developDetails.abi && Array.isArray(developDetails.abi))
-          formattedDetails.abi = developDetails.abi;
+          formattedDetails.localAbi = developDetails.abi;
       }
     } catch {}
   }
   try {
     const deploymentDetails = (await import("../web3Info/deployment-details"))
       .deploymentAddress;
+    const deployedAbi = (await import("../web3Info/deployment-details"))
+      .abi;
     formattedDetails.deployedContractAddresses = deploymentDetails;
+    formattedDetails.deployedAbi = deployedAbi;
   } catch {}
   return formattedDetails;
 };

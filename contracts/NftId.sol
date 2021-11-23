@@ -7,12 +7,12 @@ contract NftId /* is ERC721*/ {
       uint id;
       address owner;
       string uri;
+      mapping(address => string) roles;
     }
 
     uint private MAX_URI_LENGTH = 300;
     uint private tokenCount;
     mapping(uint => Token) public tokens;
-    mapping(address => mapping(uint => bool)) public tokenOwners;
 
     event Minted(address indexed _owner, uint256 indexed _tokenId);
     event Modified(address indexed _owner, uint256 indexed _tokenId);
@@ -37,8 +37,6 @@ contract NftId /* is ERC721*/ {
       token.owner = msg.sender;
       token.uri = _uri;
 
-      tokenOwners[msg.sender][tokenId] = true;
-
       emit Minted(msg.sender, tokenId);
       return tokenId;
     }
@@ -58,9 +56,15 @@ contract NftId /* is ERC721*/ {
       Token storage token = tokens[_tokenId];
       token.owner = _to;
 
-      tokenOwners[msg.sender][_tokenId] = false;
-      tokenOwners[_to][_tokenId] = true;
-
       emit Transfer(msg.sender, _to, _tokenId);
+    }
+
+    function getRoleFor(address _user, uint _tokenId) public view returns (string memory){
+      require(tokens[_tokenId].owner != address(0), "Invalid token id");
+
+      Token storage token = tokens[_tokenId];
+      if (token.owner == _user)
+        return "owner";
+      return token.roles[_user];
     }
 }
