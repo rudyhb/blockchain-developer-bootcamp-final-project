@@ -1,5 +1,7 @@
 const { ethers } = require("ethers");
 const developDetails = require("./deployment-details");
+const ethUtil = require('ethereumjs-util');
+const sigUtil = require('@metamask/eth-sig-util');
 
 const contracts = {};
 
@@ -13,7 +15,7 @@ const tryGetContract = async (chainId) => {
   const network = await provider.detectNetwork();
   const networkChainId = network.chainId;
 
-  if (chainId !== networkChainId)
+  if (parseInt(chainId) !== parseInt(networkChainId))
     throw new Error(`unsupported chainId: ${chainId}`);
 
   const abi = developDetails.abi[chainId];
@@ -39,7 +41,29 @@ module.exports = {
     return role;
   },
   recoverAddress: (messageSigned, signature) => {
-    console.log('attempting to recover address: ', messageSigned, signature);
-    return ethers.utils.recoverAddress(messageSigned, signature);
+    const recovered = sigUtil.recoverTypedSignature({
+      data: messageSigned,
+      signature,
+      version: "V4"
+    });
+
+    return recovered;
+
+    // console.log('recovered: ', recovered)
+    // console.log('checksum: ', ethUtil.toChecksumAddress(recovered))
+    //
+    // return ethUtil.toChecksumAddress(recovered);
+
+    // if (
+    //   ethUtil.toChecksumAddress(recovered) === ethUtil.toChecksumAddress(from)
+    // ) {
+    //   alert('Successfully recovered signer as ' + from);
+    // } else {
+    //   alert(
+    //     'Failed to verify signer when comparing ' + result + ' to ' + from
+    //   );
+    // }
+
+    // return ethers.utils.recoverAddress(messageSigned, signature);
   }
 };

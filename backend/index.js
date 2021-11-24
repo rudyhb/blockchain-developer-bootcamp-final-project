@@ -51,10 +51,6 @@ app.get("/auth", asyncHelper(async (req, res) => {
   throw new Error("invalid request");
 }));
 
-app.get('*', (req, res) => {
-  throw new Error('404');
-});
-
 const retrieveDetails = async req => {
   const token = (req.headers['authorization'] || '').split(' ')[1];
   if (!token)
@@ -92,6 +88,10 @@ app.put('/userData', asyncHelper(async (req, res) => {
     status
   });
 }))
+
+app.get('*', (req, res) => {
+  throw new Error('404');
+});
 
 app.use((error, req, res, next) => {
   console.error(error)

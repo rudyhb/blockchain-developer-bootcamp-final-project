@@ -8,7 +8,10 @@ export default function useSignMessage() {
   if (!library || !account)
     return null;
 
-  const signer = library.getSigner(account);
+  return async (message: any) => {
+    const params = [account, JSON.stringify(message)];
+    const method = 'eth_signTypedData_v4';
 
-  return signer.signMessage.bind(signer);
+    return await library.send(method, params);
+  }
 }

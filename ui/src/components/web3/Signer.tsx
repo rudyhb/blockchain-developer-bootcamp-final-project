@@ -15,7 +15,9 @@ export default function Signer() {
 
   const signMessage = () => {
     if (!messageToSign || !sign) return;
-    sign(messageToSign)
+    const messageJson = JSON.parse(messageToSign);
+    console.log('got message: ', messageJson)
+    sign(messageJson)
       .catch(e => {
         return `ERROR: ${e.message}`;
       })
