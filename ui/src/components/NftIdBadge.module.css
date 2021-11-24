@@ -11,3 +11,11 @@
 .nftIdBadge p {
     text-align: center;
 }
+
+.nftIdBadgeActive {
+
+}
+
+.nftIdBadge.nftIdBadgeActive {
+    background: blueviolet;
+}

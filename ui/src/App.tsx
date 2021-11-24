@@ -7,6 +7,8 @@ import { Web3Provider, JsonRpcProvider } from "@ethersproject/providers";
 import Signer from "./components/web3/Signer";
 import NavBar from "./components/NavBar";
 import Divider from "./components/shared/Divider";
+import { BigNumber } from "ethers";
+import UserDashboard from "./components/UserDashboard";
 
 function getLibrary(provider: any): JsonRpcProvider {
   let library: JsonRpcProvider;
@@ -24,12 +26,13 @@ function getLibrary(provider: any): JsonRpcProvider {
 }
 
 export default function App() {
+  const [nftId, setNftId] = React.useState<BigNumber | undefined>();
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
-      <NavBar/>
-      <Signer />
-      <Divider/>
-      <TokenManagement />
+      <NavBar />
+      <UserDashboard nftId={nftId} />
+      <Divider />
+      <TokenManagement setNftId={setNftId} />
     </Web3ReactProvider>
   );
 }

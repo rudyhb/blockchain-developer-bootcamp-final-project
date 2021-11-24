@@ -6,12 +6,15 @@ import { BigNumber } from "ethers";
 import NftIdBadge from "./NftIdBadge";
 
 const getNftIdFromEvent = (event: any) => {
-  if (event && event.args && event.args[1])
-    return event.args[1] as BigNumber;
-  throw new Error("invalid format from event")
-}
+  if (event && event.args && event.args[1]) return event.args[1] as BigNumber;
+  throw new Error("invalid format from event");
+};
 
-export default function TokenManagement() {
+export default function TokenManagement({
+  setNftId
+}: {
+  setNftId: React.Dispatch<BigNumber>;
+}) {
   const contract = useContract();
   const web3 = useWeb3React();
   // const contractWithSigner = React.useMemo(
@@ -24,6 +27,7 @@ export default function TokenManagement() {
 
   const myAddress = web3.account;
   const [myTokens, setMyTokens] = React.useState<BigNumber[] | null>(null);
+  const [selectedToken, setSelectedToken] = React.useState<string | null>(null);
   const [myTokensSymbol, setMyTokensSymbol] = React.useState(Symbol());
 
   const submitDisabled = !contractWithSigner;
@@ -32,13 +36,11 @@ export default function TokenManagement() {
   const onNewUriSubmit: React.FormEventHandler = e => {
     e.preventDefault();
     if (submitDisabled) return;
-    console.log("submitting new nft");
     setNewUriLoading(true);
     contractWithSigner
       .mint("nftid")
       .then((response: any) => {
-        console.log('answer: ', response)
-        if (response && typeof response.wait === 'function')
+        if (response && typeof response.wait === "function")
           return response.wait(1);
         return null;
       })
@@ -66,7 +68,6 @@ export default function TokenManagement() {
     ])
       .then(([mintedEvents, transferredEvents]) => {
         if (stop) return;
-        console.log(mintedEvents)
         setMyTokens(
           mintedEvents.concat(transferredEvents).map(e => getNftIdFromEvent(e))
         );
@@ -83,6 +84,11 @@ export default function TokenManagement() {
 
   if (!contract) return <Loading />;
 
+  const onClickNftToken = (token: BigNumber) => {
+    setSelectedToken(token.toHexString());
+    setNftId(token);
+  };
+
   return (
     <div
       style={{
@@ -95,8 +101,14 @@ export default function TokenManagement() {
         ) : (
           <ul>
             {myTokens.map(token => (
-              <li key={token.toHexString()}>
-                <NftIdBadge id={token}/>
+              <li
+                key={token.toHexString()}
+                style={{ cursor: "pointer" }}
+                onClick={() => onClickNftToken(token)}>
+                <NftIdBadge
+                  id={token}
+                  selected={token.toHexString() === selectedToken}
+                />
               </li>
             ))}
           </ul>

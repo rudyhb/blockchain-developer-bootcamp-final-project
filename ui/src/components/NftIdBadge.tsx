@@ -1,9 +1,19 @@
 import React from "react";
 import { BigNumber } from "ethers";
-import styles from './NftIdBadge.module.css';
+import styles from "./NftIdBadge.module.css";
 
-export default function NftIdBadge({ id }: { id: BigNumber }) {
-  return <div className={styles.nftIdBadge}>
-    <p>{id.toHexString()}</p>
-  </div>;
+export default function NftIdBadge({
+  id,
+  selected
+}: {
+  id: BigNumber;
+  selected: boolean;
+}) {
+  let className = styles.nftIdBadge;
+  if (selected) className += ` ${styles.nftIdBadgeActive}`;
+  return (
+    <div className={className}>
+      <p>{id.toHexString()}</p>
+    </div>
+  );
 }

@@ -1,15 +1,22 @@
 "use strict";
 
 const express = require("express");
+const bodyParser = require('body-parser')
 const auth = require('./auth');
 const tokenManagement = require('./tokenManagement');
 const userData = require('./userData');
+const cors = require('cors');
 
 const PORT = parseInt(process.env.APP_PORT) || 8081;
 const HOST = process.env.APP_HOST || "0.0.0.0";
 
 // App
 const app = express();
+
+app.use(bodyParser.json())
+app.use(cors({
+  origin: '*'
+}));
 
 // Error Handling Helper Function
 function asyncHelper(fn) {
@@ -39,8 +46,7 @@ app.get("/auth", asyncHelper(async (req, res) => {
 
   const {requestId, signature} = req.query;
 
-  if (requestId && signature)
-  {
+  if (requestId && signature) {
     const {nftId, role, address} = await auth.verifySignature(requestId, signature);
     const token = await tokenManagement.getNewToken(address, nftId, role);
     return res.json({
@@ -75,7 +81,7 @@ app.get("/userData", asyncHelper(async (req, res) => {
 }))
 
 app.put('/userData', asyncHelper(async (req, res) => {
-  const status = req.query.status;
+  const status = req.body.status;
   if (!status)
     throw new Error('no status provided');
   const {address, nftId, role} = await retrieveDetails(req);
@@ -95,7 +101,7 @@ app.get('*', (req, res) => {
 
 app.use((error, req, res, next) => {
   console.error(error)
-  res.json({
+  res.status(400).json({
     error: true,
     message: error.message
   });
