@@ -3,6 +3,7 @@
 const express = require("express");
 const auth = require('./auth');
 const tokenManagement = require('./tokenManagement');
+const userData = require('./userData');
 
 const PORT = parseInt(process.env.APP_PORT) || 8081;
 const HOST = process.env.APP_HOST || "0.0.0.0";
@@ -54,7 +55,46 @@ app.get('*', (req, res) => {
   throw new Error('404');
 });
 
+const retrieveDetails = async req => {
+  const token = (req.headers['authorization'] || '').split(' ')[1];
+  if (!token)
+    throw new Error('no token provided');
+  const {address, nftId, role} = await tokenManagement.retrieveDetails(token);
+  return {
+    address,
+    nftId,
+    role
+  };
+}
+
+app.get("/userData", asyncHelper(async (req, res) => {
+  const {address, nftId, role} = await retrieveDetails(req);
+  const status = await userData.getStatusForNftId(nftId);
+  return res.json({
+    nftId,
+    address,
+    role,
+    status
+  });
+}))
+
+app.put('/userData', asyncHelper(async (req, res) => {
+  const status = req.query.status;
+  if (!status)
+    throw new Error('no status provided');
+  const {address, nftId, role} = await retrieveDetails(req);
+  await userData.setStatusForNftId(nftId, status);
+  return res.json({
+    success: true,
+    nftId,
+    address,
+    role,
+    status
+  });
+}))
+
 app.use((error, req, res, next) => {
+  console.error(error)
   res.json({
     error: true,
     message: error.message

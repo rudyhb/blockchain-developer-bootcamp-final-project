@@ -39,6 +39,7 @@ module.exports = {
     return role;
   },
   recoverAddress: (messageSigned, signature) => {
+    console.log('attempting to recover address: ', messageSigned, signature);
     return ethers.utils.recoverAddress(messageSigned, signature);
   }
 };
