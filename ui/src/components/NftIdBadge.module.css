@@ -17,5 +17,7 @@
 }
 
 .nftIdBadge.nftIdBadgeActive {
-    background: blueviolet;
+    border-width: thick;
+    border-color: blueviolet;
+    border-style: solid;
 }

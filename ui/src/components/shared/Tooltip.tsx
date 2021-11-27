@@ -4,8 +4,7 @@ import useHover from "../../hooks/useHover";
 const styles: { container: React.CSSProperties; tooltip: React.CSSProperties } =
   {
     container: {
-      position: "relative",
-      display: "flex"
+      position: "relative"
     },
     tooltip: {
       boxSizing: "border-box",
@@ -34,9 +33,9 @@ export default function Tooltip({
   const [hovering, hoverAttributes] = useHover();
 
   return (
-    <div style={styles.container} {...hoverAttributes}>
+    <span style={styles.container} {...hoverAttributes}>
       {hovering && <div style={styles.tooltip}>{text}</div>}
       {children}
-    </div>
+    </span>
   );
 }

@@ -6,17 +6,17 @@ contract NftId /* is ERC721*/ {
     struct Token {
       uint id;
       address owner;
-      string uri;
       mapping(address => string) roles;
     }
 
-    uint private MAX_URI_LENGTH = 300;
     uint private tokenCount;
     mapping(uint => Token) public tokens;
 
     event Minted(address indexed _owner, uint256 indexed _tokenId);
     event Modified(address indexed _owner, uint256 indexed _tokenId);
     event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);
+    event SetRole(address indexed _user, uint256 indexed _tokenId);
+    event RemoveRole(address indexed _user, uint256 indexed _tokenId);
 
     modifier isOwned(uint _tokenId) {
       require(tokens[_tokenId].owner != address(0), "Invalid token id");
@@ -28,24 +28,36 @@ contract NftId /* is ERC721*/ {
       _;
     }
 
-    function mint(string calldata _uri) external returns (uint) {
-      require(bytes(_uri).length <= MAX_URI_LENGTH, "uri too long");
+    function mint() external returns (uint) {
 
       uint tokenId = tokenCount++;
       Token storage token = tokens[tokenId];
       token.id = tokenId;
       token.owner = msg.sender;
-      token.uri = _uri;
 
       emit Minted(msg.sender, tokenId);
       return tokenId;
     }
 
-    function changeUri(uint _tokenId, string calldata _uri) external isOwnerOf(_tokenId) {
+    function setRole(uint _tokenId, address _user, string calldata _role) external isOwnerOf(_tokenId) {
       Token storage token = tokens[_tokenId];
-      token.uri = _uri;
+      if (token.owner == _user)
+        revert("cannot change the role for the owner");
+      bytes memory currentRole = bytes(token.roles[_user]); // Uses memory
+      if (currentRole.length != 0)
+        removeRole(_tokenId, _user);
+      token.roles[_user] = _role;
 
-      emit Modified(msg.sender, _tokenId);
+      emit SetRole(_user, _tokenId);
+    }
+
+    function removeRole(uint _tokenId, address _user) public isOwnerOf(_tokenId) {
+      Token storage token = tokens[_tokenId];
+      if (token.owner == _user)
+        revert("cannot change the role for the owner");
+      delete token.roles[_user];
+
+      emit RemoveRole(_user, _tokenId);
     }
 
     function ownerOf(uint _tokenId) external view isOwned(_tokenId) returns (address) {
@@ -54,6 +66,11 @@ contract NftId /* is ERC721*/ {
 
     function transfer(address _to, uint _tokenId) external isOwnerOf(_tokenId) {
       Token storage token = tokens[_tokenId];
+
+      bytes memory currentRole = bytes(token.roles[_to]); // Uses memory
+      if (currentRole.length != 0)
+        removeRole(_tokenId, _to);
+
       token.owner = _to;
 
       emit Transfer(msg.sender, _to, _tokenId);

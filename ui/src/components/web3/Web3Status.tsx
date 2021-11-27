@@ -4,6 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import { formatEther } from "@ethersproject/units";
 import TransferEth from "./TransferEth";
 import CopyableSpan from "../shared/CopyableSpan";
+import CopyableShortAccount from "./CopyableShortAccount";
 
 function ChainId() {
   const { chainId } = useWeb3React();
@@ -74,16 +75,7 @@ function Account() {
         🤖
       </span>
       <span>
-        {account === null ? (
-          "-"
-        ) : account ? (
-          <CopyableSpan copyValue={account}>
-            {account.substring(0, 6)}...
-            {account.substring(account.length - 4)}
-          </CopyableSpan>
-        ) : (
-          ""
-        )}
+        {account === null ? "-" : <CopyableShortAccount account={account} />}
       </span>
     </>
   );

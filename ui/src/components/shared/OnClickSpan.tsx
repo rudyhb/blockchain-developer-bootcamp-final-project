@@ -4,22 +4,38 @@ import Tooltip from "./Tooltip";
 export default function OnClickSpan({
   textBeforeClick,
   textOnClick,
+  textOnClicking,
   resetMs = 3000,
   children,
   onClick
 }: {
   textBeforeClick: string;
   textOnClick: string;
+  textOnClicking?: string;
   resetMs?: number;
   children?: ReactNode;
-  onClick: () => void;
+  onClick: (() => void) | (() => Promise<void>);
 }) {
   const [clicked, setClicked] = React.useState(false);
-  const text = clicked ? textOnClick : textBeforeClick;
+  const [clicking, setClicking] = React.useState(false);
+  const text = clicked
+    ? textOnClick
+    : clicking
+    ? textOnClicking || textBeforeClick
+    : textBeforeClick;
 
   const doOnClick = () => {
-    onClick();
-    setClicked(true);
+    const job = onClick();
+    if (!job) setClicked(true);
+    else {
+      setClicking(true);
+      job
+        .catch(() => {})
+        .then(() => {
+          setClicking(false);
+          setClicked(true);
+        });
+    }
   };
 
   React.useEffect(() => {
