@@ -6,6 +6,7 @@ const auth = require('./auth');
 const tokenManagement = require('./tokenManagement');
 const userData = require('./userData');
 const cors = require('cors');
+const {generateNftImg} = require("./generateNftImg");
 
 const PORT = parseInt(process.env.APP_PORT) || 8081;
 const HOST = process.env.APP_HOST || "0.0.0.0";
@@ -94,6 +95,15 @@ app.put('/userData', asyncHelper(async (req, res) => {
     status
   });
 }))
+
+app.get('/nft/:id', asyncHelper (async (req, res) => {
+  const nftId = req.params.id;
+  if (!nftId)
+    throw new Error('no NFT ID provided');
+  const png = await generateNftImg(nftId);
+  res.setHeader('content-type', 'image/png')
+  res.status(200).send(png);
+}));
 
 app.get('*', (req, res) => {
   throw new Error('404');

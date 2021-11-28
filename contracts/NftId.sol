@@ -120,7 +120,7 @@ contract NftId is ERC721 {
     /// @notice before transferring, manage some cleanup
     function preTransferCleanup(address _to, uint256 _tokenId) private {
         bytes memory currentRole = bytes(tokenRoles[_tokenId][_to]);
-        if (currentRole.length != 0) removeRole(_tokenId, _to);
+        if (currentRole.length != 0) removeRole(_tokenId, _to); // remove role because after transfer the new role will be "owner"
     }
 
     /// @notice this is the method that should be used to check for privileges for a particular address. If empty string is returned, the user has no privileges.

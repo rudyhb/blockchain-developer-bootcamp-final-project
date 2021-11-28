@@ -164,6 +164,7 @@ export default function TokenManagement({
                 style={{ cursor: "pointer" }}
                 onClick={() => onClickNftToken(token)}>
                 <NftIdBadge
+                  contract={contract}
                   id={token}
                   selected={
                     token.toHexString() === selectedToken?.toHexString()

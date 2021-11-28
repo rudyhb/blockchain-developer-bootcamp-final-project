@@ -179,8 +179,13 @@ export default function EditToken({ nftId }: { nftId: BigNumber | null }) {
       <h3>Token Details</h3>
       {error && <p>Error: {error}</p>}
       <span>
+        <p>
+          NFT ID: {nftId.toHexString()}
+        </p>
+        <p>
         owner: <CopyableShortAccount account={owner} />
-        {isOwner ? " (me)" : ""}
+          {isOwner ? " (me)" : ""}
+        </p>
       </span>
       <h4>Roles</h4>
       {!roleMap && <Loading />}
