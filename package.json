@@ -6,6 +6,7 @@
   "author": "Rudy <rudyhasbun@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@openzeppelin/contracts": "^4.4.0",
     "dotenv": "^10.0.0",
     "ganache": "^7.0.0-alpha.2"
   },

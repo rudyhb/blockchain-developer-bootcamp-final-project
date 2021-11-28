@@ -40,7 +40,7 @@ function getErrorMessage(error: Error) {
 
 export default function Web3Button() {
   const context = useWeb3React<Web3Provider>();
-  const { connector, chainId, activate, deactivate, active, error } = context;
+  const { connector, activate, deactivate, active, error } = context;
 
   const web3Info = useWeb3Info();
 

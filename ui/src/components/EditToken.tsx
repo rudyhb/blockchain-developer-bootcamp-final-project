@@ -164,11 +164,11 @@ export default function EditToken({ nftId }: { nftId: BigNumber | null }) {
       const response = await contract.transfer(address, nftId);
       if (response && typeof response.wait === "function")
         await response.wait(1);
+      window.location.reload();
     } catch (e: any) {
       setChangeRoleError(`Error transferring NFT ID: ${e.message}`);
       console.error(e);
     }
-    window.location.reload();
   };
 
   const isOwner = !!(owner && owner === account);

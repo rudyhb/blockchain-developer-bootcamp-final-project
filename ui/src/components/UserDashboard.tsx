@@ -3,6 +3,7 @@ import useSignIn from "../hooks/useSignIn";
 import { BigNumber } from "ethers";
 import useUserData from "../hooks/useUserData";
 import Divider from "./shared/Divider";
+import { useWeb3React } from "@web3-react/core";
 
 function EditStatus({ setStatus }: { setStatus: React.Dispatch<string> }) {
   const [changingStatus, setChangingStatus] = React.useState(false);
@@ -49,10 +50,11 @@ export default function UserDashboard({ nftId }: { nftId?: BigNumber }) {
     disabled: disabledUserData,
     setStatus
   } = useUserData(token);
+  const {account} = useWeb3React();
 
   React.useEffect(() => {
     signOut();
-  }, [nftId]);
+  }, [nftId, account]);
 
   return (
     <div

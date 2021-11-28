@@ -3,7 +3,6 @@ import React from "react";
 import { useWeb3React } from "@web3-react/core";
 import { formatEther } from "@ethersproject/units";
 import TransferEth from "./TransferEth";
-import CopyableSpan from "../shared/CopyableSpan";
 import CopyableShortAccount from "./CopyableShortAccount";
 
 function ChainId() {

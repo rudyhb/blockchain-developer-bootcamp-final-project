@@ -45,7 +45,7 @@ export default function TokenManagement({
     if (submitDisabled) return;
     setNewUriLoading(true);
     contractWithSigner
-      .mint()
+      ["safeMint()"]()
       .then((response: any) => {
         if (response && typeof response.wait === "function")
           return response.wait(1);
@@ -66,21 +66,18 @@ export default function TokenManagement({
 
     let stop = false;
 
-    const filterMinted = contract.filters.Minted(myAddress, null);
     const filterTransferred = contract.filters.Transfer(null, myAddress, null);
     const filterSetRole = contract.filters.SetRole(myAddress, null);
 
     Promise.all([
-      contract.queryFilter(filterMinted),
       contract.queryFilter(filterTransferred),
       contract.queryFilter(filterSetRole)
     ])
-      .then(([mintedEvents, transferredEvents, setRoleEvents]) => {
+      .then(([transferredEvents, setRoleEvents]) => {
         if (stop) return;
         const found: { [key: string]: BigNumber } = {};
-        mintedEvents
-          .map(e => getNftIdFromEvent(e, 1))
-          .concat(transferredEvents.map(e => getNftIdFromEvent(e, 2)))
+        transferredEvents
+          .map(e => getNftIdFromEvent(e, 2))
           .concat(setRoleEvents.map(e => getNftIdFromEvent(e, 1)))
           .forEach(token => {
             found[token.toHexString()] = token;
@@ -113,8 +110,6 @@ export default function TokenManagement({
       token: BigNumber
     ): Promise<TokenHoldingDetails> => {
       const stillHave = async (token: BigNumber): Promise<boolean> => {
-        const owner = await contract.ownerOf(token);
-        if (myAddress === owner) return true;
         const role = await contract.getRoleFor(myAddress, token);
         return !!role;
       };
