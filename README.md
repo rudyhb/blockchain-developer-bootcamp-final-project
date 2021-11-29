@@ -10,7 +10,8 @@
 - Yarn (`npm i -g yarn`)
 
 ### Run tests
-- truffle test --network development
+- `ganache-cli` (run on a separate command window, and make sure it is listening on port `8545`)
+- `truffle test --network development`
 
 ## Running frontend locally
 ### Requirements
