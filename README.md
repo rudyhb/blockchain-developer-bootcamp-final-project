@@ -35,7 +35,7 @@ The NFT ID dApp provides an alternative to the `sign in with Google/Apple` web2 
 
 A user mints an NFT ID, which serves as the user's account. To authenticate, the user simply has to prove to the web2 site that they own the NFT by signing a challenge.
 
-No more usernames and passwords! All you need to log in to a web2 site is MetaMask (more wallets coming in the future).
+No more usernames and passwords! All you need to log in to a web2 site is MetaMask (support for more wallets coming in the future).
 
 ### Workflow to create NFT
 * User goes to [https://nftid.app/](https://nftid.app/) and clicks to mint a new NFT ID.
