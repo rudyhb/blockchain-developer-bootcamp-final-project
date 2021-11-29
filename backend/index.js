@@ -55,7 +55,7 @@ app.get("/auth", asyncHelper(async (req, res) => {
     });
   }
 
-  throw new Error("invalid request");
+  throw new Error(`invalid request: ${JSON.stringify(req.query)}`);
 }));
 
 const retrieveDetails = async req => {
