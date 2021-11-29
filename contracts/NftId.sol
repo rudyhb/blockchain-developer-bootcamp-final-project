@@ -17,20 +17,22 @@ contract NftId is ERC721 {
     constructor() ERC721("NFT ID", "NFTID") {}
 
     /// @notice the url for each NFT will be this concatenated with the tokenId
+    /// @return base URI
     function _baseURI() internal pure override returns (string memory) {
         return "https://nftid.app/nft/";
     }
 
-    /// @notice create a new NFT account
-    function safeMint(address to) public {
+    /// @notice create a new NFT account that is transferred to `to`
+    /// @param to address which will own the NFT
+    function safeMintOnBehalfOf(address to) public {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
     }
 
-    /// @notice create a new NFT account
+    /// @notice create a new NFT account that will be owned by the message sender
     function safeMint() public {
-        safeMint(msg.sender);
+        safeMintOnBehalfOf(msg.sender);
     }
 
     /// @notice a new role has been set for an NFT account
@@ -44,6 +46,9 @@ contract NftId is ERC721 {
     }
 
     /// @notice set or change the role (any string) for a particular address
+    /// @param _tokenId id for NFT account
+    /// @param _user address which the new role will apply to
+    /// @param _role string that will be returned when authenticating with this address
     function setRole(
         uint256 _tokenId,
         address _user,
@@ -63,7 +68,9 @@ contract NftId is ERC721 {
         emit SetRole(_user, _tokenId);
     }
 
-    /// @notice remove a role for a particular address
+    /// @notice remove the role assigned to a particular address
+    /// @param _tokenId id for NFT account
+    /// @param _user address which will have its role removed
     function removeRole(uint256 _tokenId, address _user)
         public
         isOwnerOf(_tokenId)
@@ -79,6 +86,9 @@ contract NftId is ERC721 {
 
     /// @notice transfer NFT to a new owner
     /// @dev See {IERC721-transferFrom}.
+    /// @param from current holder of NFT
+    /// @param to new holder of NFT
+    /// @param tokenId id for NFT account
     function transferFrom(
         address from,
         address to,
@@ -90,6 +100,9 @@ contract NftId is ERC721 {
 
     /// @notice transfer NFT to a new owner
     /// @dev See {IERC721-safeTransferFrom}.
+    /// @param from current holder of NFT
+    /// @param to new holder of NFT
+    /// @param tokenId id for NFT account
     function safeTransferFrom(
         address from,
         address to,
@@ -101,6 +114,10 @@ contract NftId is ERC721 {
 
     /// @notice transfer NFT to a new owner
     /// @dev See {IERC721-safeTransferFrom}.
+    /// @param from current holder of NFT
+    /// @param to new holder of NFT
+    /// @param tokenId id for NFT account
+    /// @param _data (not used)
     function safeTransferFrom(
         address from,
         address to,
@@ -112,18 +129,25 @@ contract NftId is ERC721 {
     }
 
     /// @notice transfer NFT to a new owner
+    /// @param to new holder of NFT
+    /// @param tokenId id for NFT account
     function transfer(address to, uint256 tokenId) public {
         preTransferCleanup(to, tokenId);
         safeTransferFrom(ownerOf(tokenId), to, tokenId);
     }
 
     /// @notice before transferring, manage some cleanup
+    /// @param _to new holder of NFT
+    /// @param _tokenId id for NFT account
     function preTransferCleanup(address _to, uint256 _tokenId) private {
         bytes memory currentRole = bytes(tokenRoles[_tokenId][_to]);
         if (currentRole.length != 0) removeRole(_tokenId, _to); // remove role because after transfer the new role will be "owner"
     }
 
     /// @notice this is the method that should be used to check for privileges for a particular address. If empty string is returned, the user has no privileges.
+    /// @param _user address that is trying to authenticate
+    /// @param _tokenId id for NFT account
+    /// @return the role for an authenticated user (or empty string if not authenticated)
     function getRoleFor(address _user, uint256 _tokenId)
         public
         view

@@ -1,27 +1,49 @@
-## Updates
-Previously, I thought about using `eth_getEncryptionPublicKey` and `eth_decrypt` to encrypt/decrypt data. I have now decided against this because in the case that a user's MetaMask seed phrase is compromised, an attacker would gain access to all the data the user has ever encrypted.
+# Final Project - NFT ID
 
-My new idea is to use NFTs as a way of signing in to websites. This way, a user can just transfer his NFT to easily migrate to another wallet.
+## Deployed dApp
+`//TODO`
 
-## Idea
-Use NFTs as a way to keep track of ownership to accounts. This would be an alternative way to sign in to websites (similar to Sign in with Google/Apple).
+## Running unit tests
+### Requirements
+- [Node.js](https://nodejs.org/) >= v10.13.0 and npm >= 6.4.1
+- [Truffle](https://www.npmjs.com/package/truffle) and Ganache
+- Yarn (`npm i -g yarn`)
 
-I will also create a demo website that uses this technology: an online inbox where you log in with your NFT and can store text and maybe files. Think [pastebin.com](https://pastebin.com/).
+### Run tests
+- truffle test --network development
 
-## Stretch Goals
-* More customization on the NFT data: for example, data about email, avatar, etc.
-* More wallet options (metamask, walletconnect, etc)
-* L2 options
-* the NFT also has a list of authorized users (public keys) who are able to sign in to that account, with possible roles for each
-* look into the possibility of adding privacy: maybe instead of storing the users (public keys) it might be possible to store a hash?
+## Running frontend locally
+### Requirements
+- [Node.js](https://nodejs.org/) >= v10.13.0 and npm >= 6.4.1
+- Yarn (`npm i -g yarn`)
 
-## Sample User Workflow
+### Run frontend
+- `cd ui`
+- `yarn`
+- `yarn start`
+- open a browser with MetaMask installed to `http://localhost:3000`
+
+## Screencast link
+`//TODO`
+
+## Public Ethereum wallet for certification
+`0x55F9BF9CCde8f9bE135cb2bb973986001F4b1c27`
+
+## Project description
+`//TODO`
+### Simple workflow
 * User enters website and clicks, "log in with web3".
 * User chooses the wallet to use (metamask, walletconnect, etc)
 * User chooses the NFT to use to log in. A message is sent to the server containing the NFT address/token id.
 * The server obtains the NFT's owner address and creates a challenge message for the user to sign. The server then checks if the user's signature is valid (i.e. the user is the owner of the NFT)
 * If the signature is valid, the server generates a token
 
-## Considerations
+## Features not yet implemented
+* More customization on the NFT data: for example, data about email, avatar, etc.
+* More wallet options (walletconnect, etc)
+* L2 options
+* look into the possibility of adding privacy: maybe instead of storing the users (public keys) it might be possible to store a hash?
+
+## Future Security Considerations
 * The server should wait until the owner of the NFT has not changed in the last ~3-10 blocks to be safe before sending the challenge.
 * Signing messages with Argent is different than with an externally owned account ([https://docs.argent.xyz/wallet-connect-and-argent](https://docs.argent.xyz/wallet-connect-and-argent))
