@@ -12,5 +12,8 @@
   },
   "scripts": {
     "ganache": "source .env && ganache --wallet.seed $GANACHE_USE_MNEMONIC"
+  },
+  "devDependencies": {
+    "sol-merger": "^3.1.0"
   }
 }

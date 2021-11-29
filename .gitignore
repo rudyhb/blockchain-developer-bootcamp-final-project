@@ -7,5 +7,6 @@ node_modules/
 env.js
 .secret
 .projectid
+singleFileNftId.sol
 
 ui/src/web3Info/develop-details.json
