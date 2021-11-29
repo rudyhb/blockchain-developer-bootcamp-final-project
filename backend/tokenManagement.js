@@ -2,12 +2,13 @@ const {nanoid} = require('nanoid');
 
 const tokens = {};
 
-const getNewToken = async (address, nftId, role) => {
+const getNewToken = async (address, nftId, role, chainId) => {
   const token = nanoid();
   tokens[token] = {
     address,
     nftId,
-    role
+    role,
+    chainId
   };
   return token;
 }

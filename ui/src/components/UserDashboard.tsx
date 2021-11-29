@@ -50,11 +50,11 @@ export default function UserDashboard({ nftId }: { nftId?: BigNumber }) {
     disabled: disabledUserData,
     setStatus
   } = useUserData(token);
-  const {account} = useWeb3React();
+  const {account, chainId} = useWeb3React();
 
   React.useEffect(() => {
     signOut();
-  }, [nftId, account]);
+  }, [nftId, account, chainId]);
 
   return (
     <div

@@ -71,7 +71,8 @@ const verifySignature = async (requestId, signature) => {
   return {
     nftId,
     role,
-    address
+    address,
+    chainId
   };
 }
 

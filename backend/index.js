@@ -48,8 +48,8 @@ app.get("/auth", asyncHelper(async (req, res) => {
   const {requestId, signature} = req.query;
 
   if (requestId && signature) {
-    const {nftId, role, address} = await auth.verifySignature(requestId, signature);
-    const token = await tokenManagement.getNewToken(address, nftId, role);
+    const {nftId, role, address, chainId} = await auth.verifySignature(requestId, signature);
+    const token = await tokenManagement.getNewToken(address, nftId, role, chainId);
     return res.json({
       token
     });
@@ -62,17 +62,18 @@ const retrieveDetails = async req => {
   const token = (req.headers['authorization'] || '').split(' ')[1];
   if (!token)
     throw new Error('no token provided');
-  const {address, nftId, role} = await tokenManagement.retrieveDetails(token);
+  const {address, nftId, role, chainId} = await tokenManagement.retrieveDetails(token);
   return {
     address,
     nftId,
-    role
+    role,
+    chainId
   };
 }
 
 app.get("/userData", asyncHelper(async (req, res) => {
-  const {address, nftId, role} = await retrieveDetails(req);
-  const status = await userData.getStatusForNftId(nftId);
+  const {address, nftId, role, chainId} = await retrieveDetails(req);
+  const status = await userData.getStatusForNftId(nftId, chainId);
   return res.json({
     nftId,
     address,
@@ -85,8 +86,8 @@ app.put('/userData', asyncHelper(async (req, res) => {
   const status = req.body.status;
   if (!status)
     throw new Error('no status provided');
-  const {address, nftId, role} = await retrieveDetails(req);
-  await userData.setStatusForNftId(nftId, status);
+  const {address, nftId, role, chainId} = await retrieveDetails(req);
+  await userData.setStatusForNftId(nftId, status, chainId);
   return res.json({
     success: true,
     nftId,

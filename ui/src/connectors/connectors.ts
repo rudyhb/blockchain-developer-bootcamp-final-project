@@ -4,14 +4,14 @@ import { supportedChainIds } from "../constants/web3Constants";
 import { NetworkConnector } from './NetworkConnector'
 import env from "react-dotenv";
 
-console.log('env:', env)
+// console.log('env:', env)
 
 export const injected = new InjectedConnector({
   supportedChainIds: supportedChainIds.map(c => c.chainId)
 });
 
 let network: NetworkConnector | null = null;
-if (env.RPC_URL && env.RPC_CHAIN_ID) {
+if (env.USE_LOCAL_RPC && env.RPC_URL && env.RPC_CHAIN_ID) {
   const chainId = parseInt(env.RPC_CHAIN_ID);
   if (chainId) {
     const RPC_URLS: { [chainId: number]: string } = {
