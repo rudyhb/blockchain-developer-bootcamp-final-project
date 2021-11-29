@@ -1,45 +1,37 @@
 const {nanoid} = require('nanoid');
-const redis = require('redis');
 
-const useRedis = !!process.env.USE_REDIS;
-const redisHost = process.env.REDIS_HOST || "redis";
-
-const client = useRedis ? redis.createClient({
-  host: redisHost,
-  port: 6379
-}) : null;
-
-if (useRedis)
-  client.on('error', err => {
-    console.error('Error ' + err);
-  });
+const EXPIRY_MS = 2 * 24 * 60 * 60 * 1000;
 
 const tokens = {};
 
+setInterval(() => {
+  const expiryTime = Date.now() - EXPIRY_MS;
+  Object.keys(tokens).forEach(token => {
+    if (tokens[token].time < expiryTime)
+    {
+      delete tokens[token];
+    }
+  })
+}, 5 * 60 * 1000);
+
 const getNewToken = async (address, nftId, role, chainId) => {
   const token = nanoid();
-  const data = {
+  tokens[token] = {
+    time: Date.now(),
+   data: {
     address,
-    nftId,
-    role,
-    chainId
-  };
-  if (useRedis)
-    await client.set(token, JSON.stringify(data));
-  else
-    tokens[token] = data;
+      nftId,
+      role,
+      chainId
+  }}
   return token;
 }
 
 const retrieveDetails = async (token) => {
-  let data;
-  if (useRedis)
-    data = await client.get(token);
-  else
-    data = tokens[token];
-  if (!data)
-    throw new Error('token not found');
-  return JSON.parse(data);
+  const data = tokens[token];
+  if (!data || !data.data)
+    throw new Error('token expired / not found');
+  return data.data;
 }
 
 module.exports = {
