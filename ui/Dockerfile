@@ -1,4 +1,4 @@
-FROM node AS build
+FROM node:16 AS build
 WORKDIR /app
 
 COPY package.json ./
@@ -8,7 +8,7 @@ RUN yarn install --frozen-lockfile
 COPY . .
 RUN yarn build
 
-FROM node
+FROM node:16
 RUN yarn global add serve
 WORKDIR /app
 COPY --from=build /app/build .
