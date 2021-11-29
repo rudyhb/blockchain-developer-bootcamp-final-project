@@ -23,9 +23,9 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "./init.sh && react-dotenv && react-scripts start",
-    "build": "./init.sh && react-dotenv && react-scripts build",
-    "test": "./init.sh && react-scripts test",
+    "start": "react-dotenv && react-scripts start",
+    "build": "react-dotenv && react-scripts build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
