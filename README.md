@@ -1,7 +1,7 @@
 # Final Project - NFT ID
 
 ## Deployed dApp
-`//TODO`
+[https://nftid.app/](https://nftid.app/)
 
 ## Running unit tests
 ### Requirements
@@ -20,7 +20,7 @@
 
 ### Run frontend
 - `cd ui`
-- `yarn`
+- `yarn install`
 - `yarn start`
 - open a browser with MetaMask installed to `http://localhost:3000`
 
@@ -31,13 +31,23 @@
 `0x55F9BF9CCde8f9bE135cb2bb973986001F4b1c27`
 
 ## Project description
-`//TODO`
-### Simple workflow
-* User enters website and clicks, "log in with web3".
-* User chooses the wallet to use (metamask, walletconnect, etc)
+The NFT ID dApp provides an alternative to the `sign in with Google/Apple` web2 solutions out there.
+
+A user mints an NFT ID, which serves as the user's account. To authenticate, the user simply has to prove to the web2 site that they own the NFT by signing a challenge.
+
+No more usernames and passwords! All you need to log in to a web2 site is MetaMask (more wallets coming in the future).
+
+### Workflow to create NFT
+* User goes to [https://nftid.app/](https://nftid.app/) and clicks to mint a new NFT ID.
+
+### Simple workflow to log into a web2 site
+* User enters website and clicks, "log in with web3" (you can try this out at [https://nftid.app/](https://nftid.app/))
+* User connects to his MetaMask wallet.
 * User chooses the NFT to use to log in. A message is sent to the server containing the NFT address/token id.
-* The server obtains the NFT's owner address and creates a challenge message for the user to sign. The server then checks if the user's signature is valid (i.e. the user is the owner of the NFT)
-* If the signature is valid, the server generates a token
+* The server issues a challenge to the user which contains NFT token id, as well as a random `requestId`.
+* The user signs the challenge (try signing it with MetaMask!) sends the signature to the server.
+* The server validates the signature and recovers the user's address. The server then uses an RPC node (ex: Infura) to check with the NFT ID smart contract whether the recovered address has access to the NFT token id provided.
+* If the address has access, the server issues an auth token back to the user.
 
 ## Features not yet implemented
 * More customization on the NFT data: for example, data about email, avatar, etc.
