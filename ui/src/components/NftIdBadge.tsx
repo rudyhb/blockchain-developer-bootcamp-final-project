@@ -3,9 +3,6 @@ import { BigNumber } from "ethers";
 import styles from "./NftIdBadge.module.css";
 import { Contract } from "@ethersproject/contracts";
 
-const localAddress = 'http://localhost:8081/';
-const remoteAddress = 'https://nftid.app/';
-
 export default function NftIdBadge({
   id,
   selected,
@@ -25,10 +22,6 @@ export default function NftIdBadge({
     }
     contract.tokenURI(id)
       .then((uri: any) => {
-        if (localAddress && remoteAddress)
-        {
-          uri = uri.replace(remoteAddress, localAddress);
-        }
         setSrc(uri);
       })
       .catch((e: any) => {

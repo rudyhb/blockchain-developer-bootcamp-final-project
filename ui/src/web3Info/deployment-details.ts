@@ -540,4 +540,4 @@ Object.keys(deploymentAddress).forEach(chainId => {
     abi[parseInt(chainId)] = defaultAbi;
 })
 
-export const apiAddress: string = "http://localhost:8081";
+export const apiAddress: string = "https://nftid.app/api";
