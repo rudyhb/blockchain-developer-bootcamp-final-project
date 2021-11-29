@@ -44,6 +44,7 @@
 * More wallet options (walletconnect, etc)
 * L2 options
 * look into the possibility of adding privacy: maybe instead of storing the users (public keys) it might be possible to store a hash?
+* generalize the logic so that a user can sign in to a web2 site by proving ownership of any NFT
 
 ## Future Security Considerations
 * The server should wait until the owner of the NFT has not changed in the last ~3-10 blocks to be safe before sending the challenge.
