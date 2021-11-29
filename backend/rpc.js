@@ -1,7 +1,10 @@
 const { ethers } = require("ethers");
-const developDetails = require("./deployment-details");
+const deploymentDetails = require("./deployment-details");
 const ethUtil = require('ethereumjs-util');
 const sigUtil = require('@metamask/eth-sig-util');
+
+const INFURA_ID = process.env.INFURA_PROJECT_ID;
+const useLocalRpc = !!process.env.BACKEND_USE_LOCAL_RPC;
 
 const contracts = {};
 
@@ -9,8 +12,21 @@ const tryGetContract = async (chainId) => {
   if (contracts[chainId])
     return contracts[chainId];
 
-  //TODO: add more providers here
-  const provider = new ethers.providers.JsonRpcProvider();
+  let provider;
+  switch (parseInt(chainId))
+  {
+    case 1:
+    case 3:
+    case 4:
+    case 5:
+    case 42:
+      provider = new ethers.providers.InfuraProvider(parseInt(chainId), INFURA_ID);
+      break;
+    default:
+      if (!useLocalRpc)
+        throw new Error(`unsupported chainId: ${chainId}`);
+      provider = new ethers.providers.JsonRpcProvider();
+  }
 
   const network = await provider.detectNetwork();
   const networkChainId = network.chainId;
@@ -18,13 +34,11 @@ const tryGetContract = async (chainId) => {
   if (parseInt(chainId) !== parseInt(networkChainId))
     throw new Error(`unsupported chainId: ${chainId}`);
 
-  const abi = developDetails.abi[chainId];
-  const address = developDetails.deploymentAddress[chainId];
+  const abi = deploymentDetails.abi[chainId];
+  const address = deploymentDetails.deploymentAddress[chainId];
 
   if (!abi || !address)
-    throw new Error(
-      `could not find deployment details for the contract at chainId=${chainId}`
-    );
+    throw new Error(`contract has not been deployed to chainId=${chainId}`);
 
   const contract = new ethers.Contract(address, abi, provider);
   contracts[chainId] = contract;
