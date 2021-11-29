@@ -33,7 +33,7 @@ function asyncHelper(fn) {
 //});
 //app.use(express.json());
 
-app.get("/auth", asyncHelper(async (req, res) => {
+app.get("/api/auth", asyncHelper(async (req, res) => {
   const {nftId, chainId} = req.query;
 
   if (nftId && chainId) {
@@ -71,7 +71,7 @@ const retrieveDetails = async req => {
   };
 }
 
-app.get("/userData", asyncHelper(async (req, res) => {
+app.get("/api/userData", asyncHelper(async (req, res) => {
   const {address, nftId, role, chainId} = await retrieveDetails(req);
   const status = await userData.getStatusForNftId(nftId, chainId);
   return res.json({
@@ -82,7 +82,7 @@ app.get("/userData", asyncHelper(async (req, res) => {
   });
 }))
 
-app.put('/userData', asyncHelper(async (req, res) => {
+app.put('/api/userData', asyncHelper(async (req, res) => {
   const status = req.body.status;
   if (!status)
     throw new Error('no status provided');
