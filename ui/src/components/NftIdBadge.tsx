@@ -31,7 +31,7 @@ export default function NftIdBadge({
   }, [id, contract])
 
   let className = styles.nftIdBadge;
-  if (selected) className += ` ${styles.nftIdBadgeActive}`;
+  if (selected) className += ` border-violet ${styles.nftIdBadgeActive}`;
   return (
     <div className={className}>
       <img src={src} alt={id.toHexString()}/>

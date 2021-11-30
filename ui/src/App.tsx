@@ -25,12 +25,12 @@ function getLibrary(provider: any): JsonRpcProvider {
 }
 
 export default function App() {
-  const [nftId, setNftId] = React.useState<BigNumber | undefined>();
+  const [nftId, setNftId] = React.useState<BigNumber | null>(null);
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <NavBar />
-      <UserDashboard nftId={nftId} />
-      <Divider />
+      {/*<UserDashboard nftId={nftId} />*/}
+      {/*<Divider />*/}
       <TokenManagement setNftId={setNftId} />
     </Web3ReactProvider>
   );

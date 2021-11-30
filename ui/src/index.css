@@ -23,6 +23,11 @@ li {
 .row {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.strong {
+    font-weight: bold;
 }
 
 .card {

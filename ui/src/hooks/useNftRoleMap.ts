@@ -2,6 +2,7 @@ import React from "react";
 import { Contract } from "@ethersproject/contracts";
 import { BigNumber } from "ethers";
 import useNftOwner from "./useNftOwner";
+import { useWeb3React } from "@web3-react/core";
 
 export interface RoleMap {
   [address: string]: string;
@@ -19,6 +20,7 @@ export default function useNftRoleMap({
   contract: Contract | null;
   nftId: BigNumber | null;
 }) {
+  const {active} = useWeb3React();
   const [roleMap, setRoleMap] = React.useState<RoleMap | null>();
   const [error, setError] = React.useState<string | null>(null);
   const [addresses, setAddresses] = React.useState<string[] | null>(null);
@@ -29,7 +31,7 @@ export default function useNftRoleMap({
   };
 
   React.useEffect(() => {
-    if (!nftId || !contract || !owner) return;
+    if (!nftId || !contract || !owner || !active) return;
     setError(null);
     let cancel = false;
 
@@ -56,7 +58,7 @@ export default function useNftRoleMap({
     return () => {
       cancel = true;
     };
-  }, [nftId, contract, owner, uniqueSymbol]);
+  }, [nftId, contract, owner, uniqueSymbol, active]);
 
   React.useEffect(() => {
     if (!nftId || !contract || !addresses || error) return;

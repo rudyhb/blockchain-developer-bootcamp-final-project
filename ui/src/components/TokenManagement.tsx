@@ -15,7 +15,7 @@ const getNftIdFromEvent = (event: any, offset: number) => {
 export default function TokenManagement({
   setNftId
 }: {
-  setNftId: React.Dispatch<BigNumber>;
+  setNftId: React.Dispatch<BigNumber | null>;
 }) {
   const contract = useContract();
   const web3 = useWeb3React();
@@ -28,6 +28,7 @@ export default function TokenManagement({
   const contractWithSigner = contract;
 
   const myAddress = web3.account;
+  const active = web3.active;
   const [tokensFound, setTokensFound] = React.useState<BigNumber[] | null>(
     null
   );
@@ -62,7 +63,7 @@ export default function TokenManagement({
   };
 
   React.useEffect(() => {
-    if (!contract || !myAddress) return;
+    if (!contract || !myAddress || !active) return;
 
     let stop = false;
 
@@ -96,7 +97,7 @@ export default function TokenManagement({
     return () => {
       stop = true;
     };
-  }, [contract, myTokensSymbol, myAddress]);
+  }, [contract, myTokensSymbol, myAddress, active]);
 
   React.useEffect(() => {
     if (!contract || !myAddress || !tokensFound) return;
@@ -140,24 +141,28 @@ export default function TokenManagement({
     };
   }, [contract, myAddress, tokensFound]);
 
+  if (!active) return null
+
   if (!contract) return <Loading />;
 
   const onClickNftToken = (token: BigNumber) => {
-    setSelectedToken(token);
-    setNftId(token);
+    const tk = (selectedToken && selectedToken.toHexString() === token.toHexString()) ? null : token;
+    setSelectedToken(tk);
+    setNftId(tk);
   };
 
+  const firstDivStyle: React.CSSProperties = selectedToken ? {
+    maxWidth: "50%"
+  } : {};
+
   return (
-    <div
-      style={{
-        margin: "20px"
-      }}>
-      <div>
+    <div className='container row space-between'>
+      <div style={firstDivStyle}>
         <h2>My NTF IDs:</h2>
         {myTokens === null ? (
           <Loading />
         ) : (
-          <ul>
+          <ul className='row'>
             {myTokens.map(token => (
               <li
                 key={token.toHexString()}
@@ -174,20 +179,21 @@ export default function TokenManagement({
             ))}
           </ul>
         )}
-      </div>
-      <div>
-        {newUriLoading ? (
-          <Loading />
-        ) : (
-          <div>
-            <button
-              type="submit"
-              disabled={submitDisabled}
-              onClick={onClickMint}>
-              Mint a new NFT ID
-            </button>
-          </div>
-        )}
+        <div>
+          {newUriLoading ? (
+            <Loading />
+          ) : (
+            <div>
+              <button
+                className='btn btn-violet violet'
+                type="submit"
+                disabled={submitDisabled}
+                onClick={onClickMint}>
+                Mint a new NFT ID
+              </button>
+            </div>
+          )}
+        </div>
       </div>
       <div>
         <EditToken nftId={selectedToken} />

@@ -75,7 +75,7 @@ export default function Web3Button({
         <ul className='reverse-row space-between align-right'>
           {(active || error) && (<li className='fill-up'>
             <button
-              className='btn btn-red fill-up'
+              className='btn btn-red red fill-up'
               onClick={() => {
                 deactivate();
               }}>
@@ -97,7 +97,7 @@ export default function Web3Button({
 
             return (
               <li key={name} className='fill-up'>
-                {connected && (<div className={`btn btn-${color} fill-up cursorNormal`}>
+                {connected && (<div className={`btn btn-${color} ${color} fill-up cursorNormal`}>
                   <FaCheckCircle className='green' size={30} style={{
                     marginRight: "10px"
                   }}/>
@@ -105,7 +105,7 @@ export default function Web3Button({
                 </div>)}
                 {!connected && (
                   <button
-                    className={`btn btn-${color} fill-up`}
+                    className={`btn btn-${color} ${color} fill-up`}
                     disabled={disabled}
                     onClick={() => {
                       setActivatingConnector(currentConnector);
@@ -125,7 +125,7 @@ export default function Web3Button({
           })}
           {active && (
             <li className='fill-up'>
-              <button className='btn btn-violet fill-up' onClick={onClickShowWalletInfo}>
+              <button className='btn btn-violet violet fill-up' onClick={onClickShowWalletInfo}>
                 <FaWallet className='violet' size={20} style={{marginRight: "10px"}}/>
                 wallet info
               </button>

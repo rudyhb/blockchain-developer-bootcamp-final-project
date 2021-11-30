@@ -28,7 +28,9 @@ function RemoveRoleBtn({
       textOnClick="removed!"
       textOnClicking="removing..."
       onClick={() => removeRole(address)}>
-      <FaTimesCircle />
+      <FaTimesCircle style={{
+        marginLeft: "5px"
+      }} />
     </OnClickSpan>
   );
 }
@@ -57,21 +59,24 @@ function AddRoleBtn({
 
   return (
     <>
-      <h4>Add role</h4>
-      <label>address</label>
-      <input
+      <h2>Add role</h2>
+      <LeftAndRight left="address" right={<input
         type="text"
         value={address}
         onChange={e => setAddress(e.target.value)}
-      />
-      <label>role</label>
-      <input type="text" value={role} onChange={e => setRole(e.target.value)} />
+      />}/>
+      <LeftAndRight left='role' right={<input type="text" value={role} onChange={e => setRole(e.target.value)} />}/>
       {!loading && (
-        <button disabled={submitDisabled} onClick={onClickAddRole}>
+        <LeftAndRight right={<button
+          style={{
+            marginTop: "5px"
+          }}
+          className='btn btn-white white'
+          disabled={submitDisabled} onClick={onClickAddRole}>
           Add
-        </button>
+        </button>} left=''/>
       )}
-      {loading && <Loading loadingText="adding role..." />}
+      {loading && <LeftAndRight left={<Loading loadingText='adding role'/>} right=''/>}
     </>
   );
 }
@@ -98,21 +103,42 @@ function TransferNftBtn({
 
   return (
     <>
-      <h4>Transfer NFT ID</h4>
-      <label>to</label>
-      <input
+      <h2>Transfer NFT ID</h2>
+      <LeftAndRight left='to' right={<input
         type="text"
         value={address}
         onChange={e => setAddress(e.target.value)}
-      />
+      />}/>
       {!loading && (
-        <button disabled={submitDisabled} onClick={onClickSubmit}>
+        <LeftAndRight right={<button
+          style={{
+            marginTop: "5px"
+          }}
+          className='btn btn-white white'
+          disabled={submitDisabled} onClick={onClickSubmit}>
           Transfer
-        </button>
+        </button>} left=''/>
       )}
-      {loading && <Loading loadingText="transferring..." />}
+      {loading && <LeftAndRight left={<Loading loadingText='transferring'/>} right=''/>}
     </>
   );
+}
+
+function LeftAndRight({
+                        left,
+                        right
+                      } : {
+  left: React.ReactNode,
+  right: React.ReactNode
+}) {
+  return (
+    <div className='row space-between'>
+      <div style={{
+        marginRight: "5px"
+      }}>{left}</div>
+      <div className='strong'>{right}</div>
+    </div>
+  )
 }
 
 export default function EditToken({ nftId }: { nftId: BigNumber | null }) {
@@ -130,7 +156,8 @@ export default function EditToken({ nftId }: { nftId: BigNumber | null }) {
     null
   );
 
-  const error = combineNonEmpty([ownerError, roleMapError, changeRoleError]);
+  // const error = combineNonEmpty([ownerError, roleMapError, changeRoleError]);
+  const error = (ownerError || roleMapError || changeRoleError) && "Please see the console for more details.";
   const removeRole = async (address: string) => {
     if (!contract || !nftId) return;
     setChangeRoleError(null);
@@ -175,31 +202,41 @@ export default function EditToken({ nftId }: { nftId: BigNumber | null }) {
 
   if (!nftId) return null;
   return (
-    <div>
-      <h3>Token Details</h3>
-      {error && <p>Error: {error}</p>}
-      <span>
-        <p>
-          NFT ID: {nftId.toHexString()}
-        </p>
-        <p>
-        owner: <CopyableShortAccount account={owner} />
-          {isOwner ? " (me)" : ""}
-        </p>
-      </span>
-      <h4>Roles</h4>
-      {!roleMap && <Loading />}
+    <div
+      className='container white background-violet'
+
+      style={{
+        borderRadius: "10px",
+        lineHeight: "1.75em"
+    }}>
+      <h2>Token Details</h2>
+      {error && (
+        <div style={{
+          marginBottom: "30px"
+        }}>
+          <LeftAndRight right="" left="An error occurred"/>
+          <LeftAndRight right="" left={error}/>
+        </div>
+      )}
+      <LeftAndRight left="NFT ID:" right={nftId.toHexString()}/>
+      <LeftAndRight left="owner" right={<>
+        <CopyableShortAccount account={owner} />
+        {isOwner ? " (me)" : ""}
+      </>}/>
+      <h2>Roles</h2>
+      {!roleMap && <LeftAndRight left={<Loading/>} right={""}/> }
       {roleMap &&
         Object.keys(roleMap).map(address => (
           <div key={address}>
-            <CopyableShortAccount account={address} />: {roleMap[address]}{" "}
-            {address === account ? " (me)" : ""}
-            <RemoveRoleBtn
-              isOwner={isOwner}
-              owner={owner}
-              address={address}
-              removeRole={removeRole}
-            />
+            <LeftAndRight left={<><CopyableShortAccount account={address} />:</>} right={<>
+              {`${roleMap[address]}${address === account ? " (me)" : ""}`}
+              <RemoveRoleBtn
+                isOwner={isOwner}
+                owner={owner}
+                address={address}
+                removeRole={removeRole}
+              />
+            </>}/>
           </div>
         ))}
       {roleMap && isOwner && <AddRoleBtn addRole={addRole} />}
@@ -207,3 +244,4 @@ export default function EditToken({ nftId }: { nftId: BigNumber | null }) {
     </div>
   );
 }
+
