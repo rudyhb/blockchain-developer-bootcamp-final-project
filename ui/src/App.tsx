@@ -5,7 +5,6 @@ import TokenManagement from "./components/TokenManagement";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider, JsonRpcProvider } from "@ethersproject/providers";
 import NavBar from "./components/NavBar";
-import Divider from "./components/shared/Divider";
 import { BigNumber } from "ethers";
 import UserDashboard from "./components/UserDashboard";
 
