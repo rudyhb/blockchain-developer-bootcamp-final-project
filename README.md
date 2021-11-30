@@ -3,44 +3,51 @@
 ## Deployed dApp
 [https://nftid.app/](https://nftid.app/)
 
-## Running unit tests
+## Running Unit Tests
 ### Requirements
 - [Node.js](https://nodejs.org/) >= v10.13.0 and npm >= 6.4.1
 - [Truffle](https://www.npmjs.com/package/truffle) and Ganache
 - Yarn (`npm i -g yarn`)
 
-### Run tests
+### Run Tests
 - `ganache-cli` (run on a separate command window, and make sure it is listening on port `8545`)
 - `truffle test --network development`
 
-## Running frontend locally
+## Running Frontend Locally
 ### Requirements
 - [Node.js](https://nodejs.org/) >= v10.13.0 and npm >= 6.4.1
 - Yarn (`npm i -g yarn`)
 
-### Run frontend
+### Run Frontend
 - `cd ui`
 - `yarn install`
 - `yarn start`
 - open a browser with MetaMask installed to `http://localhost:3000`
 
-## Screencast link
+## Screencast Link
 `//TODO`
 
-## Public Ethereum wallet for certification
+## Public Ethereum Wallet for Certification
 `0x55F9BF9CCde8f9bE135cb2bb973986001F4b1c27`
 
-## Project description
+## Directory Structure
+* `ui`: React frontend
+* `contracts`: Smart contract written in Solidity
+* `migrations`: migration files related to the `contracts`
+* `test`: unit tests for the smart contract
+* `backend`: source code for the demo web2 backend that is deployed at `https://nftid.app/api/`. The dApp uses this as a sample web2 app to authenticate with.
+
+## Project Description
 The NFT ID dApp provides an alternative to the `sign in with Google/Apple` web2 solutions out there.
 
 A user mints an NFT ID, which serves as the user's account. To authenticate, the user simply has to prove to the web2 site that they own the NFT by signing a challenge.
 
 No more usernames and passwords! All you need to log in to a web2 site is MetaMask (support for more wallets coming in the future).
 
-### Workflow to create NFT
+### Workflow to Create NFT
 * User goes to [https://nftid.app/](https://nftid.app/) and clicks to mint a new NFT ID.
 
-### Simple workflow to log into a web2 site
+### Simple Workflow to Log into a Web2 Site
 * User enters website and clicks, "log in with web3" (you can try this out at [https://nftid.app/](https://nftid.app/))
 * User connects to his MetaMask wallet.
 * User chooses the NFT to use to log in. A message is sent to the server containing the NFT address/token id.
@@ -49,7 +56,7 @@ No more usernames and passwords! All you need to log in to a web2 site is MetaMa
 * The server validates the signature and recovers the user's address. The server then uses an RPC node (ex: Infura) to check with the NFT ID smart contract whether the recovered address has access to the NFT token id provided.
 * If the address has access, the server issues an auth token back to the user.
 
-## Features not yet implemented
+## Features Not Yet Implemented
 * More customization on the NFT data: for example, data about email, avatar, etc.
 * More wallet options (walletconnect, etc)
 * L2 options
