@@ -12,10 +12,132 @@ code {
     monospace;
 }
 
-button {
-    cursor: pointer;
+ul {
+    padding: 0;
 }
 
-button:disabled {
+li {
+    list-style-type: none;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.reverse-row {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.space-around {
+    justify-content: space-around;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.align-right {
+    align-items: end;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 50px;
+}
+
+.fill-up {
+    height: 100%;
+}
+
+.btn {
+    box-sizing: border-box;
+    border-style: solid;
+    padding: 10px;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    border-radius: 5px;
+    border-width: medium;
+    background: transparent;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+    max-width: 200px;
+}
+.btn-clear {
+    border: none;
+}
+
+.btn:disabled {
     cursor: not-allowed;
+}
+
+.cursorNormal {
+    cursor: auto;
+}
+
+.btn-green {
+    border-color: #4AC264;
+}
+.btn-red {
+    border-color: #F2132C;
+}
+.btn-yellow {
+    border-color: #E8B620;
+}
+.btn-violet {
+    border-color: #A007F2;
+}
+.btn-blue {
+    border-color: #3356F5;
+}
+
+.green {
+    color: #4AC264
+}
+
+.red {
+    color: #F2132C
+}
+
+.yellow {
+    color: #E8B620
+}
+
+.violet {
+    color: #A007F2
+}
+
+.blue {
+    color: #3356F5
+}
+.background-green {
+    background: #4AC264
+}
+
+.background-red {
+    background: #F2132C
+}
+
+.background-yellow {
+    background: #E8B620
+}
+
+.background-violet {
+    background: #A007F2
+}
+
+.background-blue {
+    background: #3356F5
 }

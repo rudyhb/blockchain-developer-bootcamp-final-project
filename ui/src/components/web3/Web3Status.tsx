@@ -125,7 +125,7 @@ export default function Web3Status({ showDetails = false }) {
   const { active, error } = useWeb3React();
 
   return (
-    <>
+    <div className='background-violet' style={{color: "white"}}>
       <h3 style={{ margin: "1rem", textAlign: "right" }}>
         {active ? "🟢" : error ? "🔴" : "🟠"}
       </h3>
@@ -148,6 +148,6 @@ export default function Web3Status({ showDetails = false }) {
         <Balance />
         <TransferEth />
       </h3>
-    </>
+    </div>
   );
 }
