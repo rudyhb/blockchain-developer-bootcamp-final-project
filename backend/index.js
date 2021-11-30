@@ -76,6 +76,7 @@ app.get("/api/userData", asyncHelper(async (req, res) => {
   const status = await userData.getStatusForNftId(nftId, chainId);
   return res.json({
     nftId,
+    chainId,
     address,
     role,
     status
@@ -91,6 +92,7 @@ app.put('/api/userData', asyncHelper(async (req, res) => {
   return res.json({
     success: true,
     nftId,
+    chainId,
     address,
     role,
     status

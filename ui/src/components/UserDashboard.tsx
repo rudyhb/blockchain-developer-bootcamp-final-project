@@ -187,6 +187,7 @@ export default function UserDashboard({ nftId }: { nftId?: BigNumber }) {
                 {userData && (
                   <>
                     <LeftAndRight left="NFT ID" right={userData.nftId} />
+                    <LeftAndRight left="Chain ID" right={userData.chainId} />
                     <LeftAndRight left="Role" right={userData.role} />
                     <LeftAndRight left="Stored Data" right={userData.status} />
                     {!disabledUserData && <EditStatus setStatus={setStatus} />}

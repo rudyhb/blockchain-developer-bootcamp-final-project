@@ -25,8 +25,9 @@ const makeMessage = (requestId, nftId, chainId) => {
        - This is DApp Specific
        - Be as explicit as possible when building out the message schema.
       */
-      nftId: nftId,
-      requestId: requestId,
+      nftId,
+      chainId,
+      requestId,
       action: 'Sign In',
     },
     // Refers to the keys of the *types* object below.

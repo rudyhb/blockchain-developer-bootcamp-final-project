@@ -8,6 +8,7 @@ export interface UserData extends BaseResponse {
   address: string;
   role: string;
   status: string;
+  chainId: string;
 }
 
 export default function useUserData(
