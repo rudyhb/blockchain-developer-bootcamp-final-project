@@ -11,6 +11,7 @@
 
 ### Run Tests
 - `ganache-cli` (run on a separate command window, and make sure it is listening on port `8545`)
+- `yarn install`
 - `truffle test --network development`
 
 ## Running Frontend Locally
