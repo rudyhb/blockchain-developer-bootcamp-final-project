@@ -10,7 +10,10 @@ import { ethers } from "ethers";
 
 export function useContractBase(
   contractAddress: string | null | undefined,
-  ABI: readonly (string | ethers.utils.Fragment | JsonFragment)[] | null | undefined
+  ABI:
+    | readonly (string | ethers.utils.Fragment | JsonFragment)[]
+    | null
+    | undefined
 ): Contract | null {
   if (contractAddress === AddressZero) {
     throw Error(`Invalid 'contractAddress' parameter '${contractAddress}'.`);
@@ -22,7 +25,8 @@ export function useContractBase(
     ? library.getSigner(account).connectUnchecked()
     : library;
 
-  const connectionUrl: string | undefined = signerOrProvider?.provider?.connection?.url;
+  const connectionUrl: string | undefined =
+    signerOrProvider?.provider?.connection?.url;
 
   return useMemo(() => {
     return !contractAddress || !ABI

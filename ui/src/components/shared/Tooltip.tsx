@@ -21,9 +21,9 @@ const styles: { container: React.CSSProperties; tooltip: React.CSSProperties } =
   };
 
 export default function Tooltip({
-                                  text,
-                                  children
-                                }: {
+  text,
+  children
+}: {
   text: string;
   children?: React.ReactNode;
 }) {
@@ -31,7 +31,11 @@ export default function Tooltip({
 
   return (
     <span style={styles.container} {...hoverAttributes}>
-      {hovering && <div className='btn btn-clear' style={styles.tooltip}>{text}</div>}
+      {hovering && (
+        <div className="btn btn-clear" style={styles.tooltip}>
+          {text}
+        </div>
+      )}
       {children}
     </span>
   );

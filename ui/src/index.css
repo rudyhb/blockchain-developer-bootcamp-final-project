@@ -94,6 +94,7 @@ li {
     text-decoration: none;
     max-width: 200px;
 }
+
 .btn-clear {
     border: none;
 }
@@ -113,18 +114,23 @@ li {
 .btn-white {
     border-color: white;
 }
+
 .btn-green {
     border-color: #4AC264;
 }
+
 .btn-red {
     border-color: #F2132C;
 }
+
 .btn-yellow {
     border-color: #E8B620;
 }
+
 .btn-violet {
     border-color: #A007F2;
 }
+
 .btn-blue {
     border-color: #3356F5;
 }
@@ -152,6 +158,7 @@ li {
 .blue {
     color: #3356F5
 }
+
 .background-green {
     background: #4AC264
 }
@@ -190,4 +197,20 @@ li {
 
 .border-blue {
     border-color: #3356F5
+}
+
+.margin-provider-5 {
+
+}
+
+.margin-provider-50 {
+
+}
+
+.margin-provider-5 .margin-user-right {
+    margin-right: 5px;
+}
+
+.margin-provider-50 .margin-user-right {
+    margin-right: 50px;
 }

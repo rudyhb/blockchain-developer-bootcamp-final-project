@@ -4,7 +4,8 @@ import useContract from "../hooks/useContract";
 import { useWeb3React } from "@web3-react/core";
 import CopyableShortAccount from "./web3/CopyableShortAccount";
 import useNftOwner from "../hooks/useNftOwner";
-import { combineNonEmpty } from "../utils/utils";
+// import { combineNonEmpty } from "../utils/utils";
+import LeftAndRight from "./shared/LeftAndRight";
 import useNftRoleMap from "../hooks/useNftRoleMap";
 import Loading from "./shared/Loading";
 import { FaTimesCircle } from "react-icons/fa";
@@ -28,9 +29,11 @@ function RemoveRoleBtn({
       textOnClick="removed!"
       textOnClicking="removing..."
       onClick={() => removeRole(address)}>
-      <FaTimesCircle style={{
-        marginLeft: "5px"
-      }} />
+      <FaTimesCircle
+        style={{
+          marginLeft: "5px"
+        }}
+      />
     </OnClickSpan>
   );
 }
@@ -60,23 +63,45 @@ function AddRoleBtn({
   return (
     <>
       <h2>Add role</h2>
-      <LeftAndRight left="address" right={<input
-        type="text"
-        value={address}
-        onChange={e => setAddress(e.target.value)}
-      />}/>
-      <LeftAndRight left='role' right={<input type="text" value={role} onChange={e => setRole(e.target.value)} />}/>
+      <LeftAndRight
+        left="address"
+        right={
+          <input
+            type="text"
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+          />
+        }
+      />
+      <LeftAndRight
+        left="role"
+        right={
+          <input
+            type="text"
+            value={role}
+            onChange={e => setRole(e.target.value)}
+          />
+        }
+      />
       {!loading && (
-        <LeftAndRight right={<button
-          style={{
-            marginTop: "5px"
-          }}
-          className='btn btn-white white'
-          disabled={submitDisabled} onClick={onClickAddRole}>
-          Add
-        </button>} left=''/>
+        <LeftAndRight
+          right={
+            <button
+              style={{
+                marginTop: "5px"
+              }}
+              className="btn btn-white white"
+              disabled={submitDisabled}
+              onClick={onClickAddRole}>
+              Add
+            </button>
+          }
+          left=""
+        />
       )}
-      {loading && <LeftAndRight left={<Loading loadingText='adding role'/>} right=''/>}
+      {loading && (
+        <LeftAndRight left={<Loading loadingText="adding role" />} right="" />
+      )}
     </>
   );
 }
@@ -104,41 +129,37 @@ function TransferNftBtn({
   return (
     <>
       <h2>Transfer NFT ID</h2>
-      <LeftAndRight left='to' right={<input
-        type="text"
-        value={address}
-        onChange={e => setAddress(e.target.value)}
-      />}/>
+      <LeftAndRight
+        left="to"
+        right={
+          <input
+            type="text"
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+          />
+        }
+      />
       {!loading && (
-        <LeftAndRight right={<button
-          style={{
-            marginTop: "5px"
-          }}
-          className='btn btn-white white'
-          disabled={submitDisabled} onClick={onClickSubmit}>
-          Transfer
-        </button>} left=''/>
+        <LeftAndRight
+          right={
+            <button
+              style={{
+                marginTop: "5px"
+              }}
+              className="btn btn-white white"
+              disabled={submitDisabled}
+              onClick={onClickSubmit}>
+              Transfer
+            </button>
+          }
+          left=""
+        />
       )}
-      {loading && <LeftAndRight left={<Loading loadingText='transferring'/>} right=''/>}
+      {loading && (
+        <LeftAndRight left={<Loading loadingText="transferring" />} right="" />
+      )}
     </>
   );
-}
-
-function LeftAndRight({
-                        left,
-                        right
-                      } : {
-  left: React.ReactNode,
-  right: React.ReactNode
-}) {
-  return (
-    <div className='row space-between'>
-      <div style={{
-        marginRight: "5px"
-      }}>{left}</div>
-      <div className='strong'>{right}</div>
-    </div>
-  )
 }
 
 export default function EditToken({ nftId }: { nftId: BigNumber | null }) {
@@ -157,7 +178,9 @@ export default function EditToken({ nftId }: { nftId: BigNumber | null }) {
   );
 
   // const error = combineNonEmpty([ownerError, roleMapError, changeRoleError]);
-  const error = (ownerError || roleMapError || changeRoleError) && "Please see the console for more details.";
+  const error =
+    (ownerError || roleMapError || changeRoleError) &&
+    "Please see the console for more details.";
   const removeRole = async (address: string) => {
     if (!contract || !nftId) return;
     setChangeRoleError(null);
@@ -203,40 +226,54 @@ export default function EditToken({ nftId }: { nftId: BigNumber | null }) {
   if (!nftId) return null;
   return (
     <div
-      className='container white background-violet'
-
+      className="container white background-violet margin-provider-5"
       style={{
         borderRadius: "10px",
         lineHeight: "1.75em"
-    }}>
+      }}>
       <h2>Token Details</h2>
       {error && (
-        <div style={{
-          marginBottom: "30px"
-        }}>
-          <LeftAndRight right="" left="An error occurred"/>
-          <LeftAndRight right="" left={error}/>
+        <div
+          style={{
+            marginBottom: "30px"
+          }}>
+          <LeftAndRight right="" left="An error occurred" />
+          <LeftAndRight right="" left={error} />
         </div>
       )}
-      <LeftAndRight left="NFT ID:" right={nftId.toHexString()}/>
-      <LeftAndRight left="owner" right={<>
-        <CopyableShortAccount account={owner} />
-        {isOwner ? " (me)" : ""}
-      </>}/>
+      <LeftAndRight left="NFT ID:" right={nftId.toHexString()} />
+      <LeftAndRight
+        left="owner"
+        right={
+          <>
+            <CopyableShortAccount account={owner} />
+            {isOwner ? " (me)" : ""}
+          </>
+        }
+      />
       <h2>Roles</h2>
-      {!roleMap && <LeftAndRight left={<Loading/>} right={""}/> }
+      {!roleMap && <LeftAndRight left={<Loading />} right={""} />}
       {roleMap &&
         Object.keys(roleMap).map(address => (
           <div key={address}>
-            <LeftAndRight left={<><CopyableShortAccount account={address} />:</>} right={<>
-              {`${roleMap[address]}${address === account ? " (me)" : ""}`}
-              <RemoveRoleBtn
-                isOwner={isOwner}
-                owner={owner}
-                address={address}
-                removeRole={removeRole}
-              />
-            </>}/>
+            <LeftAndRight
+              left={
+                <>
+                  <CopyableShortAccount account={address} />:
+                </>
+              }
+              right={
+                <>
+                  {`${roleMap[address]}${address === account ? " (me)" : ""}`}
+                  <RemoveRoleBtn
+                    isOwner={isOwner}
+                    owner={owner}
+                    address={address}
+                    removeRole={removeRole}
+                  />
+                </>
+              }
+            />
           </div>
         ))}
       {roleMap && isOwner && <AddRoleBtn addRole={addRole} />}
@@ -244,4 +281,3 @@ export default function EditToken({ nftId }: { nftId: BigNumber | null }) {
     </div>
   );
 }
-

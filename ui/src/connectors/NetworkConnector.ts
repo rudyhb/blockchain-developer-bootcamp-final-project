@@ -225,7 +225,11 @@ export class NetworkConnector extends AbstractConnector {
         },
         (err, data) => {
           if (err) return reject(err);
-          if (!data.result || !Array.isArray(data.result) || typeof data.result[0] !== "string")
+          if (
+            !data.result ||
+            !Array.isArray(data.result) ||
+            typeof data.result[0] !== "string"
+          )
             return reject(new Error("invalid data returned from eth_accounts"));
           return resolve(data.result);
         }

@@ -45,8 +45,7 @@ export default function TokenManagement({
     e.preventDefault();
     if (submitDisabled) return;
     setNewUriLoading(true);
-    contractWithSigner
-      ["safeMint()"]()
+    contractWithSigner["safeMint()"]()
       .then((response: any) => {
         if (response && typeof response.wait === "function")
           return response.wait(1);
@@ -141,28 +140,33 @@ export default function TokenManagement({
     };
   }, [contract, myAddress, tokensFound]);
 
-  if (!active) return null
+  if (!active) return null;
 
   if (!contract) return <Loading />;
 
   const onClickNftToken = (token: BigNumber) => {
-    const tk = (selectedToken && selectedToken.toHexString() === token.toHexString()) ? null : token;
+    const tk =
+      selectedToken && selectedToken.toHexString() === token.toHexString()
+        ? null
+        : token;
     setSelectedToken(tk);
     setNftId(tk);
   };
 
-  const firstDivStyle: React.CSSProperties = selectedToken ? {
-    maxWidth: "50%"
-  } : {};
+  const firstDivStyle: React.CSSProperties = selectedToken
+    ? {
+        maxWidth: "50%"
+      }
+    : {};
 
   return (
-    <div className='container row space-between'>
+    <div className="container row space-between intrusive">
       <div style={firstDivStyle}>
         <h2>My NTF IDs:</h2>
         {myTokens === null ? (
           <Loading />
         ) : (
-          <ul className='row'>
+          <ul className="row">
             {myTokens.map(token => (
               <li
                 key={token.toHexString()}
@@ -185,7 +189,7 @@ export default function TokenManagement({
           ) : (
             <div>
               <button
-                className='btn btn-violet violet'
+                className="btn btn-violet violet"
                 type="submit"
                 disabled={submitDisabled}
                 onClick={onClickMint}>

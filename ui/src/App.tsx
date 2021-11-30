@@ -29,9 +29,8 @@ export default function App() {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <NavBar />
-      {/*<UserDashboard nftId={nftId} />*/}
-      {/*<Divider />*/}
       <TokenManagement setNftId={setNftId} />
+      <UserDashboard nftId={nftId || undefined} />
     </Web3ReactProvider>
   );
 }

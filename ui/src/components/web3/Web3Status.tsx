@@ -9,7 +9,7 @@ function Account() {
   const { account } = useWeb3React();
 
   return (
-    <div className='row space-between'>
+    <div className="row space-between">
       <span>Account</span>
       <span>
         {account === null ? "-" : <CopyableShortAccount account={account} />}
@@ -47,10 +47,14 @@ function Balance() {
   }, [account, library, chainId]); // ensures refresh if referential identity of library doesn't change across chainIds
 
   return (
-    <div className='row space-between'>
+    <div className="row space-between">
       <span>Balance</span>
       <span>
-        {balance === null ? "Error" : balance ? `Ξ${formatEther(balance).slice(0, 12)}` : ""}
+        {balance === null
+          ? "Error"
+          : balance
+          ? `Ξ${formatEther(balance).slice(0, 12)}`
+          : ""}
       </span>
     </div>
   );
@@ -58,8 +62,8 @@ function Balance() {
 
 export default function Web3Status() {
   return (
-    <div className='background-violet white intrusive container'>
-      <div className='card h3 center'>
+    <div className="background-violet white intrusive container">
+      <div className="card h3 center">
         <Account />
         <Balance />
         <TransferEth />

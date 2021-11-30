@@ -4,6 +4,9 @@ import { BigNumber } from "ethers";
 import useUserData from "../hooks/useUserData";
 import Divider from "./shared/Divider";
 import { useWeb3React } from "@web3-react/core";
+import NftImg from "./NftImg";
+import useContract from "../hooks/useContract";
+import LeftAndRight from "./shared/LeftAndRight";
 
 function EditStatus({ setStatus }: { setStatus: React.Dispatch<string> }) {
   const [changingStatus, setChangingStatus] = React.useState(false);
@@ -15,21 +18,54 @@ function EditStatus({ setStatus }: { setStatus: React.Dispatch<string> }) {
     setChangingStatus(false);
   };
   return (
-    <div>
+    <div
+      style={{
+        marginTop: "10px"
+      }}>
       {changingStatus ? (
         <>
-          <input
-            type="text"
-            onChange={e => setNewStatus(e.target.value)}
-            value={newStatus}
+          <LeftAndRight
+            left=""
+            right={
+              <input
+                type="text"
+                onChange={e => setNewStatus(e.target.value)}
+                value={newStatus}
+              />
+            }
           />
-          <button disabled={!newStatus} onClick={set}>
-            change
-          </button>
-          <button onClick={() => setChangingStatus(false)}>cancel</button>
+          <LeftAndRight
+            style={{
+              marginTop: "5px"
+            }}
+            left={
+              <button
+                className="btn btn-white white"
+                disabled={!newStatus}
+                onClick={set}>
+                change
+              </button>
+            }
+            right={
+              <button
+                className="btn btn-white white"
+                onClick={() => setChangingStatus(false)}>
+                cancel
+              </button>
+            }
+          />
         </>
       ) : (
-        <button onClick={() => setChangingStatus(true)}>change status</button>
+        <LeftAndRight
+          left=""
+          right={
+            <button
+              className="btn btn-white white"
+              onClick={() => setChangingStatus(true)}>
+              change data
+            </button>
+          }
+        />
       )}
     </div>
   );
@@ -50,57 +86,112 @@ export default function UserDashboard({ nftId }: { nftId?: BigNumber }) {
     disabled: disabledUserData,
     setStatus
   } = useUserData(token);
-  const {account, chainId} = useWeb3React();
+  const { account, chainId } = useWeb3React();
+  const contract = useContract();
 
   React.useEffect(() => {
     signOut();
   }, [nftId, account, chainId]);
 
+  if (!account) return null;
+
   return (
-    <div
-      style={{
-        display: "grid",
-        gridGap: "1rem",
-        gridTemplateColumns: "fit-content",
-        margin: "auto",
-        padding: "20px"
-      }}>
-      {!nftId && <p>click on an NFT ID below (or mint a new one)</p>}
+    <>
+      <Divider />
+      <div
+        className="container"
+        style={{
+          minHeight: "500px"
+        }}>
+        <div className="row space-between">
+          <div>
+            <h2>Try out your NFT ID!</h2>
+            {!nftId && (
+              <p>
+                click on an NFT ID above (or mint a new one) to sign in with it
+              </p>
+            )}
 
-      {errorSigningIn && <p>Error signing in: {errorSigningIn}</p>}
+            {errorSigningIn && <p>Error signing in: {errorSigningIn}</p>}
 
-      {!signedIn && (
-        <button
-          disabled={disabledSigningIn}
-          style={{
-            height: "3rem",
-            borderRadius: "1rem",
-            cursor: "pointer"
-          }}
-          onClick={signIn}>
-          Sign In with NFT {nftId?.toHexString()}
-        </button>
-      )}
+            {!signedIn && nftId && (
+              <button
+                className="btn btn-violet violet"
+                disabled={disabledSigningIn}
+                onClick={signIn}>
+                Sign In with{" "}
+                <NftImg
+                  style={{
+                    width: "15px",
+                    marginLeft: "5px"
+                  }}
+                  id={nftId}
+                  contract={contract}
+                />
+              </button>
+            )}
 
-      {signedIn && <p>Signed in with {nftId?.toHexString()}</p>}
+            {signedIn && nftId && (
+              <>
+                <p>
+                  Signed in with{" "}
+                  <NftImg
+                    style={{
+                      width: "15px",
+                      marginLeft: "5px"
+                    }}
+                    id={nftId}
+                    contract={contract}
+                  />{" "}
+                  {nftId.toHexString()}
+                </p>
+                <button
+                  className="btn btn-violet violet"
+                  style={{
+                    height: "3rem",
+                    borderRadius: "1rem",
+                    cursor: "pointer"
+                  }}
+                  onClick={() => {
+                    signOut();
+                  }}>
+                  Sign Out
+                </button>
+              </>
+            )}
+          </div>
+          <div>
+            {signedIn && (userData || errorUserData) && (
+              <div
+                className="container white background-violet margin-provider-50"
+                style={{
+                  borderRadius: "10px",
+                  lineHeight: "1.75em"
+                }}>
+                <h2>Account Dashboard</h2>
+                {errorUserData && (
+                  <div
+                    style={{
+                      marginBottom: "30px"
+                    }}>
+                    <LeftAndRight right="" left="Error retrieving user data" />
+                    <LeftAndRight right="" left={errorUserData} />
+                  </div>
+                )}
 
-      {(signedIn && (userData || errorUserData)) && (
-        <>
-          <Divider />
-
-          {errorUserData && <p>Error retrieving user data: {errorUserData}</p>}
-
-          {userData && (
-            <>
-              <h3>User Data</h3>
-              <p>NFT ID: {userData.nftId}</p>
-              <p>Role: {userData.role}</p>
-              <p>Status: {userData.status}</p>
-              {!disabledUserData && <EditStatus setStatus={setStatus} />}
-            </>
-          )}
-        </>
-      )}
-    </div>
+                {userData && (
+                  <>
+                    <LeftAndRight left="NFT ID" right={userData.nftId} />
+                    <LeftAndRight left="Role" right={userData.role} />
+                    <LeftAndRight left="Stored Data" right={userData.status} />
+                    {!disabledUserData && <EditStatus setStatus={setStatus} />}
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

@@ -6,20 +6,22 @@ interface Web3Info {
   localContractAddress?: string;
   deployedContractAddresses?: { [chainId: number]: string };
   localAbi?: ReadonlyArray<Fragment | JsonFragment | string>;
-  deployedAbi?: { [chainId: number]: ReadonlyArray<Fragment | JsonFragment | string> };
+  deployedAbi?: {
+    [chainId: number]: ReadonlyArray<Fragment | JsonFragment | string>;
+  };
 }
 
 const importDetails: () => Promise<Web3Info> = async () => {
   const formattedDetails: Web3Info = {};
-  if (env.USE_LOCAL_RPC)
-  {
+  if (env.USE_LOCAL_RPC) {
     try {
       const developDetails: any = await import(
         "../web3Info/develop-details.json"
-        );
+      );
       if (developDetails) {
         if (typeof developDetails.contractAddress === "string")
-          formattedDetails.localContractAddress = developDetails.contractAddress;
+          formattedDetails.localContractAddress =
+            developDetails.contractAddress;
         if (developDetails.abi && Array.isArray(developDetails.abi))
           formattedDetails.localAbi = developDetails.abi;
       }
@@ -28,8 +30,7 @@ const importDetails: () => Promise<Web3Info> = async () => {
   try {
     const deploymentDetails = (await import("../web3Info/deployment-details"))
       .deploymentAddress;
-    const deployedAbi = (await import("../web3Info/deployment-details"))
-      .abi;
+    const deployedAbi = (await import("../web3Info/deployment-details")).abi;
     formattedDetails.deployedContractAddresses = deploymentDetails;
     formattedDetails.deployedAbi = deployedAbi;
   } catch {}

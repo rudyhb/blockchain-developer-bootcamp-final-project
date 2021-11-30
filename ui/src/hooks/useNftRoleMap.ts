@@ -20,7 +20,7 @@ export default function useNftRoleMap({
   contract: Contract | null;
   nftId: BigNumber | null;
 }) {
-  const {active} = useWeb3React();
+  const { active } = useWeb3React();
   const [roleMap, setRoleMap] = React.useState<RoleMap | null>();
   const [error, setError] = React.useState<string | null>(null);
   const [addresses, setAddresses] = React.useState<string[] | null>(null);

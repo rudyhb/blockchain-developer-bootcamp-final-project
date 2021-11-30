@@ -9,24 +9,28 @@ export default function NavBar() {
 
   return (
     <div className={styles.navbar}>
-      <div style={{
-        maxWidth: "300px",
-        fontSize: "xxx-large",
-        left: "20px",
-        position: "absolute"
-      }} className='violet btn btn-clear cursorNormal'>
+      <div
+        style={{
+          maxWidth: "300px",
+          fontSize: "xxx-large",
+          left: "20px",
+          position: "absolute"
+        }}
+        className="violet btn btn-clear cursorNormal">
         NFT ID
       </div>
-      <Web3Button onClickShowWalletInfo={() => {
-        setShowDetails(d => !d);
-      }}/>
+      <Web3Button
+        onClickShowWalletInfo={() => {
+          setShowDetails(d => !d);
+        }}
+      />
       {showDetails && (
         <>
-          <Divider/>
+          <Divider />
           <Web3Status />
         </>
       )}
-      <Divider/>
+      <Divider />
     </div>
   );
 }
