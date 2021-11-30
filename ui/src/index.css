@@ -25,6 +25,21 @@ li {
     flex-direction: row;
 }
 
+.card {
+    max-width: 400px;
+    line-height: 1.5em;
+}
+
+.center {
+    width: 75%;
+    margin: 0 auto;
+}
+
+.h3 {
+    font-size: 1.17em;
+    font-weight: bold;
+}
+
 .reverse-row {
     display: flex;
     flex-direction: row-reverse;
@@ -49,7 +64,6 @@ li {
 }
 
 .container {
-    max-width: 1200px;
     margin: 0 auto;
     padding: 50px;
 }
@@ -87,6 +101,13 @@ li {
     cursor: auto;
 }
 
+.intrusive {
+    margin: -1rem 0;
+}
+
+.btn-white {
+    border-color: white;
+}
 .btn-green {
     border-color: #4AC264;
 }
@@ -101,6 +122,10 @@ li {
 }
 .btn-blue {
     border-color: #3356F5;
+}
+
+.white {
+    color: white;
 }
 
 .green {
@@ -140,4 +165,24 @@ li {
 
 .background-blue {
     background: #3356F5
+}
+
+.border-green {
+    border-color: #4AC264
+}
+
+.border-red {
+    border-color: #F2132C
+}
+
+.border-yellow {
+    border-color: #E8B620
+}
+
+.border-violet {
+    border-color: #A007F2
+}
+
+.border-blue {
+    border-color: #3356F5
 }

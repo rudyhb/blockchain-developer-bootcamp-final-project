@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function Divider() {
-  return <hr style={{ margin: "2rem" }} />;
+  return <hr className='border-violet' style={{ margin: "1rem 0" }} />;
 }

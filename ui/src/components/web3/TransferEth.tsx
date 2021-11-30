@@ -75,25 +75,43 @@ export default function TransferEth() {
 
   return (
     <>
-      <label>Send ETH To: </label>
-      <input
-        type="text"
-        value={recipient}
-        onChange={e => setRecip(e.target.value)}
-      />
-      <br />
-      <label>Amount: </label>
-      <input
-        type="number"
-        min={0}
-        value={value}
-        onChange={e => setVal(e.target.value)}
-      />
-      <button disabled={btnDisabled} onClick={sendEth}>
-        Send
-      </button>
-      {loading && <Loading loadingText={"sending"} />}
-      {success && <p>Sent!</p>}
+      <div className='row space-between'>
+        <label>Send ETH To: </label>
+        <input
+          type="text"
+          value={recipient}
+          onChange={e => setRecip(e.target.value)}
+        />
+      </div>
+      <div className='row space-between'>
+        <label>Amount: </label>
+        <input
+          type="number"
+          min={0}
+          value={value}
+          onChange={e => setVal(e.target.value)}
+        />
+      </div>
+      <div className='row space-between'>
+        <div>{" "}</div>
+        {!loading && !success && (
+          <button style={{
+            marginTop:"10px"
+          }} className='btn btn-white white' disabled={btnDisabled} onClick={sendEth}>
+            Send
+          </button>
+        )}
+        {loading && (
+          <div className='btn btn-clear'>
+            <Loading loadingText={"sending"} />
+          </div>
+        )}
+        {success && (
+          <div className='btn btn-clear'>
+            Sent!
+          </div>
+        )}
+      </div>
     </>
   );
 }

@@ -7,7 +7,6 @@ const styles: { container: React.CSSProperties; tooltip: React.CSSProperties } =
       position: "relative"
     },
     tooltip: {
-      boxSizing: "border-box",
       position: "absolute",
       width: "160px",
       bottom: "100%",
@@ -15,8 +14,6 @@ const styles: { container: React.CSSProperties; tooltip: React.CSSProperties } =
       marginLeft: "-80px",
       borderRadius: "3px",
       backgroundColor: "hsla(0, 0%, 20%, 0.9)",
-      padding: "7px",
-      marginBottom: "5px",
       color: "#fff",
       textAlign: "center",
       fontSize: "14px"
@@ -34,7 +31,7 @@ export default function Tooltip({
 
   return (
     <span style={styles.container} {...hoverAttributes}>
-      {hovering && <div style={styles.tooltip}>{text}</div>}
+      {hovering && <div className='btn btn-clear' style={styles.tooltip}>{text}</div>}
       {children}
     </span>
   );
