@@ -16,7 +16,7 @@
 
 ## Running Frontend Locally
 ### Requirements
-- [Node.js](https://nodejs.org/) >= v10.13.0 and npm >= 6.4.1
+- [Node.js](https://nodejs.org/) >= v10.13.0 and npm >= 6.4.1 (note: I think there is an issue with create-react-app and node v17. If you have issues, please use node v16.x)
 - Yarn (`npm i -g yarn`)
 
 ### Run Frontend
