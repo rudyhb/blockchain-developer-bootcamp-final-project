@@ -25,7 +25,7 @@
 - open a browser with MetaMask installed to `http://localhost:3000`
 
 ## Screencast Link
-`//TODO`
+[https://vimeo.com/651705881](https://vimeo.com/651705881)
 
 ## Public Ethereum Wallet for Certification
 `0x55F9BF9CCde8f9bE135cb2bb973986001F4b1c27`
