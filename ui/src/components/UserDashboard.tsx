@@ -34,26 +34,27 @@ function EditStatus({ setStatus }: { setStatus: React.Dispatch<string> }) {
               />
             }
           />
-          <LeftAndRight
+          <div
+            className="row"
             style={{
-              marginTop: "5px"
-            }}
-            left={
-              <button
-                className="btn btn-white white"
-                disabled={!newStatus}
-                onClick={set}>
-                change
-              </button>
-            }
-            right={
-              <button
-                className="btn btn-white white"
-                onClick={() => setChangingStatus(false)}>
-                cancel
-              </button>
-            }
-          />
+              marginTop: "5px",
+              justifyContent: "flex-end"
+            }}>
+            <button
+              style={{
+                marginRight: "10px"
+              }}
+              className="btn btn-white white"
+              disabled={!newStatus}
+              onClick={set}>
+              change
+            </button>
+            <button
+              className="btn btn-white white"
+              onClick={() => setChangingStatus(false)}>
+              cancel
+            </button>
+          </div>
         </>
       ) : (
         <LeftAndRight
@@ -160,13 +161,17 @@ export default function UserDashboard({ nftId }: { nftId?: BigNumber }) {
               </>
             )}
           </div>
-          <div>
+          <div
+            style={{
+              flexGrow: 0.5
+            }}>
             {signedIn && (userData || errorUserData) && (
               <div
                 className="container white background-violet margin-provider-50"
                 style={{
                   borderRadius: "10px",
-                  lineHeight: "1.75em"
+                  lineHeight: "1.75em",
+                  fontSize: "x-large"
                 }}>
                 <h2>Account Dashboard</h2>
                 {errorUserData && (

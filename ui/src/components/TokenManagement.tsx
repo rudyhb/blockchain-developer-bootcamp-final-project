@@ -199,7 +199,10 @@ export default function TokenManagement({
           )}
         </div>
       </div>
-      <div>
+      <div
+        style={{
+          flexGrow: 0.5
+        }}>
         <EditToken nftId={selectedToken} />
       </div>
     </div>
